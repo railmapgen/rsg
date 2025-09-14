@@ -1,5 +1,5 @@
 {
-  "component": "__APP_NAME__",
+  "component": "rsg",
   "version": "3.0.3",
   "environment": "PRD",
   "instance": "GitHub"

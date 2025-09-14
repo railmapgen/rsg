@@ -1,6 +1,6 @@
 {
-    "short_name": "__APP_DISPLAY_NAME__",
-    "name": "__APP_DISPLAY_NAME__",
+    "short_name": "rsg",
+    "name": "Rail Sign Generator",
     "icons": [
         {
             "src": "favicon.ico",
