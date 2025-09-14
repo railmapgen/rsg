@@ -1,0 +1,280 @@
+/* src/scripts/MetroSignGenerator.css */
+/* 导入思源黑体字体 */
+@font-face {
+  font-family: 'Noto Sans SC'; /* 自定义字体名称 */
+  font-style: normal; /* 字体样式，normal表示常规 */
+  font-weight: 30; /* 字体粗细，400表示常规 */
+  src:
+    url('public/syht_CN-MEDIUM.OTF') format('opentype'); /* TTF格式 */
+}
+
+/* 使用字体 */
+body {
+  font-family: 'Noto Sans SC', sans-serif; /* 使用导入的字体 */
+}
+
+.metro-sign-generator {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #041c31;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #666;
+  font-size: 18px;
+}
+
+.container {
+  display: flex;
+  gap: 30px;
+}
+
+.controls {
+  flex: 1;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.preview {
+  flex: 1;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.preview h2 {
+  margin-top: 0;
+  color: #041c31;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.preview-container {
+  justify-content: center;
+  align-items: center;
+  height:170px;
+  background: #f0f4f8;
+  border-radius: 8px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.add-btn, .download-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.add-btn {
+  background-color: #00aa52;
+  color: white;
+}
+
+.add-btn:hover {
+  background-color: #008a42;
+}
+
+.download-btn {
+  background-color: #00a3c2;
+  color: white;
+}
+
+.download-btn:hover {
+  background-color: #0083a0;
+}
+
+.bg-color {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bg-color label {
+  white-space: nowrap;
+}
+
+.block-config {
+  background: #f9fbfd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #e1e8ed;
+}
+
+.block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.block-header h3 {
+  margin: 0;
+  color: #041c31;
+  display: flex;
+  align-items: center;
+}
+
+.remove-btn {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.radio-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.style-group h4 {
+  margin: 15px 0 10px;
+  color: #555;
+}
+
+.radio-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.radio-grid > * {
+  flex: 1 1 auto; /* 每个子元素根据内容宽度自动调整 */
+}
+
+.style-option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  background: #f0f4f8;
+  border-radius: 4px;
+  width: 100px;
+}
+
+.special-styles {
+  background: #eef7ff;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 3px solid #00a3c2;
+}
+
+.special-input {
+  margin-bottom: 12px;
+}
+
+.special-input label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.special-input input[type="text"],
+.special-input input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.collapse-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.preview-container {
+  overflow-x: auto;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1000px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .radio-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .radio-grid {
+    grid-template-columns: 1fr;
+  }
+}
