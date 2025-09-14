@@ -3,7 +3,7 @@
     "name": "rsg",
     "repository": "github:railmapgen/rsg",
     "bugs": {
-        "url": "https://github.com/railmapgen/sign-creater/issues"
+        "url": "https://github.com/railmapgen/rsg/issues"
     },
     "license": "GPL-3.0-only",
     "dependencies": {
