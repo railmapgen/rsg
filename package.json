@@ -1,7 +1,7 @@
 {
-    "homepage": "https://railmapgen.github.io/sign-creater",
-    "name": "sign-creater",
-    "repository": "github:railmapgen/sign-creater",
+    "homepage": "https://railmapgen.github.io/rsg",
+    "name": "rsg",
+    "repository": "github:railmapgen/rsg",
     "bugs": {
         "url": "https://github.com/railmapgen/sign-creater/issues"
     },
@@ -51,5 +51,5 @@
         "lint:fix": "eslint ./src --fix",
         "preview": "vite preview"
     },
-    "version": "3.0.3"
+    "version": "3.0.2"
 }

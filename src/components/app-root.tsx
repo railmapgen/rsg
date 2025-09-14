@@ -5,7 +5,7 @@ import WindowHeader from './window-header';
 //import { useTranslation } from 'react-i18next';
 import { RMMantineProvider, RMPage, RMPageBody, /*RMPageHeader,*/ RMWindow } from '@railmapgen/mantine-components';
 //import { Button, Text, TextInput } from '@mantine/core';
-import MetroSignGenerator from '../../scripts/signs';
+import RailSignGenerator from '../../scripts/signs';
 //import React from 'react';
 
 export default function AppRoot() {
@@ -19,9 +19,9 @@ export default function AppRoot() {
                 <WindowHeader />
                 <RMPage>
                     <RMPageBody direction="column" px="xs">
-                        {/* 直接渲染 MetroSignGenerator 组件 */}
+                        {/* 直接渲染 RailSignGenerator 组件 */}
 
-                        <MetroSignGenerator />
+                        <RailSignGenerator />
                     </RMPageBody>
                 </RMPage>
             </RMWindow>
