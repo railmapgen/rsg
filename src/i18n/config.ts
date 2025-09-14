@@ -8,7 +8,7 @@ import koTranslation from './translations/ko.json';
 
 const i18n = new rmgRuntime.I18nBuilder()
     .use(initReactI18next)
-    .withAppName('Rail Sign Generator')
+    .withAppName('rsg')
     .withLng(rmgRuntime.getLanguage())
     .withResource('en', enTranslation)
     .withResource('zh-Hans', zhHansTranslation)
