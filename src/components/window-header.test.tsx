@@ -6,6 +6,6 @@ describe('WindowHeader', () => {
     it('Can render window header', () => {
         render(<WindowHeader />);
 
-        expect(screen.getByRole('heading').textContent).toContain('Sign Creater');
+        expect(screen.getByRole('heading').textContent).toContain('Rail Sign Generator');
     });
 });
