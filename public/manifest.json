@@ -1,6 +1,6 @@
 {
-    "short_name": "Sign Creater",
-    "name": "Sign Creater",
+    "short_name": "rsg",
+    "name": "Rail Sign Generator",
     "icons": [
         {
             "src": "favicon.ico",
