@@ -8,4 +8,4 @@ This project provides a Beijing subway-style sign generation function, restoring
 ## 项目简介
 本项目提供了北京地铁风格的指示牌生成功能，还原了北京地铁特有的视觉元素。
 
-https://github.com/railmapgen/rsg/README_IMAGES/1.png
+![Project screenshot](https://github.com/railmapgen/rsg/blob/main/README_IMAGES/1.png)
