@@ -1,3 +1,48 @@
 {
-    "Open": "開く"
+    "head_bar": {
+        "project_name": "地下鉄案内標識生成器"
+    },
+    "main_area": {
+        "preview": "標識プレビュー",
+        "new_block": "新しいブロックを追加",
+        "export_as_png": "PNGとしてダウンロード",
+        "background_color": "背景色"
+    },
+    "blocks": {
+        "block": "ブロック",
+        "cutline": "分割線（右）",
+        "styles": {
+            "style": "スタイル",
+            "single_block": "単一グリッド",
+            "two_block": "二つのグリッド",
+            "three_blocks": "三つのグリッド",
+            "exit_logo": "出口ロゴ",
+            "toilet": "トイレ",
+            "blank": "空白",
+            "line": "路線",
+            "line_space": "路線 + スペース",
+            "terminal_text": "終点テキスト",
+            "exit_texi": "出口テキスト",
+            "special": "独特な属性",
+            "specials": {
+                "line_number": "路線番号",
+                "line_color": "路線色",
+                "terminal_zh": "終点駅（中国語）",
+                "terminal_en": "終点駅（英語）",
+                "text_align": "テキストの配置",
+                "align_right": "右寄せ",
+                "align_center": "中央寄せ",
+                "align_left": "左寄せ",
+                "exit_letter": "出口番号",
+                "exit_lower": "出口の下付き文字",
+                "exit_zh": "出口（中国語）",
+                "exit_en": "出口（英語）"
+            }
+        }
+    },
+    "useful": {
+        "yes": "はい",
+        "no": "いいえ"
+    },
+    "copy": "一部の素材はhttps://centralgo.site/vitool/より提供されています。侵害がある場合は削除のためご連絡ください。"
 }

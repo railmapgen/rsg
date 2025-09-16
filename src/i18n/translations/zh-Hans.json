@@ -1,3 +1,48 @@
 {
-    "Open": "打开"
+    "head_bar": {
+        "project_name": "地铁导视生成器"
+    },
+    "main_area": {
+        "preview": "标志预览",
+        "new_block": "添加新块",
+        "export_as_png": "下载png",
+        "background_color": "背景颜色"
+    },
+    "blocks": {
+        "block": "块",
+        "cutline": "分割线(右)",
+        "styles":{
+            "style": "样式",
+            "single_block": "单格",
+            "two_block": "两格",
+            "three_blocks": "三格",
+            "exit_logo": "出口图标",
+            "toilet": "洗手间",
+            "blank": "空",
+            "line": "线路",
+            "line_space": "线路+空格",
+            "terminal_text": "终点文字",
+            "exit_texi": "出口文字",
+            "special": "独特属性",
+            "specials": {
+                "line_number": "线路编号",
+                "line_color": "线路颜色",
+                "terminal_zh": "终点站中文",
+                "terminal_en": "终点站英文",
+                "text_align": "对齐方式",
+                "align_right": "靠右对齐",
+                "align_center": "居中对齐",
+                "align_left": "靠左对齐",
+                "exit_letter": "出口编号",
+                "exit_lower": "出口下角标",
+                "exit_zh": "出口中文",
+                "exit_en": "出口英文"
+            }
+        }
+    },
+    "useful": {
+        "yes": "是",
+        "no": "否"
+    },
+    "copy": "部分素材来自https://centralgo.site/vitool/，如有侵权请联系删除"
 }

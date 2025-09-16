@@ -1,1 +1,48 @@
-{}
+{
+    "head_bar": {
+        "project_name": "Subway Signage Generator"
+    },
+    "main_area": {
+        "preview": "Sign Preview",
+        "new_block": "Add New Block",
+        "export_as_png": "Download as PNG",
+        "background_color": "Background Color"
+    },
+    "blocks": {
+        "block": "Block",
+        "cutline": "Dividing Line (Right)",
+        "styles": {
+            "style": "Style",
+            "single_block": "Single Grid",
+            "two_block": "Two Grids",
+            "three_blocks": "Three Grids",
+            "exit_logo": "Exit Logo",
+            "toilet": "Toilet",
+            "blank": "Blank",
+            "line": "Line",
+            "line_space": "Line + Space",
+            "terminal_text": "Terminal Text",
+            "exit_texi": "Exit Text",
+            "special": "Unique Attributes",
+            "specials": {
+                "line_number": "Line Number",
+                "line_color": "Line Color",
+                "terminal_zh": "Terminal Station (Chinese)",
+                "terminal_en": "Terminal Station (English)",
+                "text_align": "Text Alignment",
+                "align_right": "Align Right",
+                "align_center": "Align Center",
+                "align_left": "Align Left",
+                "exit_letter": "Exit Number",
+                "exit_lower": "Exit Subscript",
+                "exit_zh": "Exit (Chinese)",
+                "exit_en": "Exit (English)"
+            }
+        }
+    },
+    "useful": {
+        "yes": "Yes",
+        "no": "No"
+    },
+    "copy": "Some materials are from https://centralgo.site/vitool/. Please contact us for removal if there is any infringement."
+}
