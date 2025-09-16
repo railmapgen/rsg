@@ -5,7 +5,7 @@
   font-style: normal; /* 字体样式，normal表示常规 */
   font-weight: 30; /* 字体粗细，400表示常规 */
   src:
-    url('syht_CN-MEDIUM.OTF') format('opentype'); /* TTF格式 */
+    url('font/SourceHanSansCN-Normal.OTF') format('opentype'); /* TTF格式 */
 }
 
 /* 使用字体 */
