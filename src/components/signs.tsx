@@ -823,8 +823,10 @@ const RailSignGenerator: React.FC = () => {
 
             // 处理旋转
             const transform = imgElement.getAttribute('transform');
+            console.log(transform);
             if (transform && transform.includes('rotate')) {
-                const rotateMatch = transform.match(/rotate\(([^,]+),([^,]+),([^)]+)\)/);
+                const rotateMatch = transform.match(/rotate\(([^ ]+) ([^ ]+) ([^)]+)\)/);
+                console.log(rotateMatch);
                 if (rotateMatch) {
                     const rotationAngle = parseFloat(rotateMatch[1]);
                     const centerX = parseFloat(rotateMatch[2]);
@@ -833,6 +835,7 @@ const RailSignGenerator: React.FC = () => {
                     ctx.save();
                     ctx.translate(centerX, centerY);
                     ctx.rotate((rotationAngle * Math.PI) / 180);
+                    console.log((rotationAngle * Math.PI) / 180);
                     ctx.translate(-centerX, -centerY);
                     ctx.drawImage(imgTag, x, y, width, height);
                     ctx.restore();
