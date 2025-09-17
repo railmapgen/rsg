@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 // 在 signs.tsx 顶部添加
 import './MetroSignGenerator.css';
 
@@ -36,6 +37,7 @@ const getBlockWidth = (style: string): number => {
 };
 
 const RailSignGenerator: React.FC = () => {
+    const { t } = useTranslation();
     const [blocks, setBlocks] = useState<BlockData[]>([
         { id: 1, style: 'Exit', cutLine: false, specialStyles: {}, collapsed: false },
     ]);
@@ -47,50 +49,50 @@ const RailSignGenerator: React.FC = () => {
         Exit: [
             {
                 type: 'radio',
-                label: '对齐方式',
+                label: t('blocks.styles.specials.text_align'),
                 defaultValue: 'C',
                 options: [
-                    { value: 'R', label: '靠右对齐' },
-                    { value: 'L', label: '靠左对齐' },
-                    { value: 'C', label: '居中对齐' },
+                    { value: 'R', label: t('blocks.styles.specials.align_right') },
+                    { value: 'L', label: t('blocks.styles.specials.align_left') },
+                    { value: 'C', label: t('blocks.styles.specials.align_center') },
                 ],
             },
         ],
         Line: [
-            { type: 'number', label: '线路编号', defaultValue: '10' },
-            { type: 'text', label: '线路颜色', defaultValue: '#00a3c2' },
+            { type: 'number', label: t('blocks.styles.specials.line_number'), defaultValue: '10' },
+            { type: 'text', label: t('blocks.styles.specials.line_color'), defaultValue: '#00a3c2' },
         ],
         'Line-space': [
-            { type: 'number', label: '线路编号', defaultValue: '10' },
-            { type: 'text', label: '线路颜色', defaultValue: '#00a3c2' },
+            { type: 'number', label: t('blocks.styles.specials.line_number'), defaultValue: '10' },
+            { type: 'text', label: t('blocks.styles.specials.line_color'), defaultValue: '#00a3c2' },
         ],
         ExitText: [
-            { type: 'text', label: '出口编号', defaultValue: 'A', maxLength: 1 },
-            { type: 'text', label: '出口下角标', defaultValue: '', maxLength: 1 },
-            { type: 'text', label: '出口中文', defaultValue: '蓝靛厂南路' },
-            { type: 'text', label: '出口英文', defaultValue: 'Landianchang South Rd.' },
+            { type: 'text', label: t('blocks.styles.specials.exit_letter'), defaultValue: 'A', maxLength: 1 },
+            { type: 'text', label: t('blocks.styles.specials.exit_lower'), defaultValue: '', maxLength: 1 },
+            { type: 'text', label: t('blocks.styles.specials.exit_zh'), defaultValue: '蓝靛厂南路' },
+            { type: 'text', label: t('blocks.styles.specials.exit_en'), defaultValue: 'Landianchang South Rd.' },
         ],
         To: [
-            { type: 'text', label: '终点站中文', defaultValue: '宛平城' },
-            { type: 'text', label: '终点站英文', defaultValue: 'Wanpingcheng' },
+            { type: 'text', label: t('blocks.styles.specials.terminal_zh'), defaultValue: '宛平城' },
+            { type: 'text', label: t('blocks.styles.specials.terminal_en'), defaultValue: 'Wanpingcheng' },
             {
                 type: 'radio',
-                label: '对齐方式',
+                label: t('blocks.styles.specials.text_align'),
                 defaultValue: 'R',
                 options: [
-                    { value: 'R', label: '靠右对齐' },
-                    { value: 'L', label: '靠左对齐' },
-                    { value: 'C', label: '居中对齐' }, // 添加居中对齐选项
+                    { value: 'R', label: t('blocks.styles.specials.align_right') },
+                    { value: 'L', label: t('blocks.styles.specials.align_left') },
+                    { value: 'C', label: t('blocks.styles.specials.align_center') }, // 添加居中对齐选项
                 ],
             },
             {
                 type: 'radio',
-                label: '线路类型',
+                label: t('blocks.styles.specials.line_type'),
                 defaultValue: 'NM',
                 options: [
-                    { value: 'NM', label: '普通线' },
-                    { value: 'LOOP', label: '环线' },
-                    { value: 'T', label: '终点站' },
+                    { value: 'NM', label: t('blocks.styles.specials.normal_line') },
+                    { value: 'LOOP', label: t('blocks.styles.specials.loop_line') },
+                    { value: 'T', label: t('blocks.styles.specials.terminal_station') },
                 ],
             },
         ],
@@ -210,7 +212,7 @@ const RailSignGenerator: React.FC = () => {
                         <button onClick={() => toggleCollapse(block.id)} className="collapse-btn">
                             {block.collapsed ? '▶' : '▼'}
                         </button>
-                        块 {block.id}
+                        {t('blocks.block')} {block.id}
                     </h3>
                     <button onClick={() => removeBlock(block.id)} className="remove-btn">
                         ×
@@ -220,7 +222,7 @@ const RailSignGenerator: React.FC = () => {
                 {!block.collapsed && (
                     <>
                         <div className="section">
-                            <label>分割线（右）</label>
+                            <label>{t('blocks.cutline')}</label>
                             <div className="radio-group">
                                 <label>
                                     <input
@@ -229,7 +231,7 @@ const RailSignGenerator: React.FC = () => {
                                         checked={!block.cutLine}
                                         onChange={() => updateBlockCutLine(block.id, false)}
                                     />
-                                    否
+                                    {t('useful.no')}
                                 </label>
                                 <label>
                                     <input
@@ -238,15 +240,15 @@ const RailSignGenerator: React.FC = () => {
                                         checked={block.cutLine}
                                         onChange={() => updateBlockCutLine(block.id, true)}
                                     />
-                                    是
+                                    {t('useful.yes')}
                                 </label>
                             </div>
                         </div>
 
                         <div className="section">
-                            <label>样式</label>
+                            <label>{t('blocks.styles.style')}</label>
                             <div className="style-group">
-                                <h4>单格：</h4>
+                                <h4>{t('blocks.styles.single_block')}：</h4>
                                 <div className="radio-grid">
                                     {['Exit', '↗', '↙', '↖', '↘', '→', '←', '↑', '↓', 'toilet', 'blank1'].map(
                                         style => (
@@ -259,18 +261,18 @@ const RailSignGenerator: React.FC = () => {
                                                     onChange={() => updateBlockStyle(block.id, style)}
                                                 />
                                                 {style === 'Exit'
-                                                    ? '出口图标'
+                                                    ? t('blocks.styles.exit_logo')
                                                     : style === 'toilet'
-                                                      ? '洗手间'
+                                                      ? t('blocks.styles.toilet')
                                                       : style === 'blank1'
-                                                        ? '空'
+                                                        ? t('blocks.styles.blank')
                                                         : style}
                                             </label>
                                         )
                                     )}
                                 </div>
 
-                                <h4>两格：</h4>
+                                <h4>{t('blocks.styles.two_block')}：</h4>
                                 <div className="radio-grid">
                                     {['Line', 'Line-space', 'blank2'].map(style => (
                                         <label key={style} className="style-option">
@@ -282,16 +284,16 @@ const RailSignGenerator: React.FC = () => {
                                                 onChange={() => updateBlockStyle(block.id, style)}
                                             />
                                             {style === 'Line'
-                                                ? '线路'
+                                                ? t('blocks.styles.line')
                                                 : style === 'Line-space'
-                                                  ? '线路+空格'
+                                                  ? t('blocks.styles.line_space')
                                                   : style === 'blank2'
-                                                    ? '空'
-                                                    : '终点站(开往)'}
+                                                    ? t('blocks.styles.blank')
+                                                    : t('blocks.styles.terminal_dest')}
                                         </label>
                                     ))}
                                 </div>
-                                <h4>三格：</h4>
+                                <h4>{t('blocks.styles.three_blocks')}：</h4>
                                 <div className="radio-grid">
                                     {['To', 'ExitText'].map(style => (
                                         <label key={style} className="style-option">
@@ -302,7 +304,11 @@ const RailSignGenerator: React.FC = () => {
                                                 checked={block.style === style}
                                                 onChange={() => updateBlockStyle(block.id, style)}
                                             />
-                                            {style === 'To' ? '终点文字' : style === 'ExitText' ? '出口文字' : style}
+                                            {style === 'To'
+                                                ? t('blocks.styles.terminal_text')
+                                                : style === 'ExitText'
+                                                  ? t('blocks.styles.exit_text')
+                                                  : style}
                                         </label>
                                     ))}
                                 </div>
@@ -311,7 +317,7 @@ const RailSignGenerator: React.FC = () => {
 
                         {block.style in specialStyleConfigs && (
                             <div className="section special-styles">
-                                <label>独特属性</label>
+                                <label>{t('blocks.styles.special')}</label>
                                 {renderSpecialInputs(block)}
                             </div>
                         )}
@@ -615,14 +621,14 @@ const RailSignGenerator: React.FC = () => {
 
                     // 确定前缀文本
                     let prefixChinese = '';
-                    let prefixEnglish = 'To';
+                    let prefixEnglish = t('prefixes.to');
                     if (lineType === 'LOOP') {
-                        prefixChinese = '下一站';
+                        prefixChinese = t('prefixes.next_station');
                     } else if (lineType === 'T') {
-                        prefixChinese = '终点站';
-                        prefixEnglish = 'Terminus';
+                        prefixChinese = t('prefixes.terminus');
+                        prefixEnglish = t('prefixes.terminus');
                     } else {
-                        prefixChinese = '开往';
+                        prefixChinese = t('prefixes.to');
                     }
 
                     // 计算文本位置
@@ -863,8 +869,7 @@ const RailSignGenerator: React.FC = () => {
 
     return (
         <div className="metro-sign-generator">
-            <b>Notice: This tool don&apos;t support English.</b>
-            <h2>标志预览</h2>
+            <h2>{t('main_area.preview')}</h2>
             <div className="preview-container">
                 <SvgPreview />
             </div>
@@ -872,13 +877,13 @@ const RailSignGenerator: React.FC = () => {
                 <div className="controls">
                     <div className="actions">
                         <button onClick={addBlock} className="add-btn">
-                            + 添加新块
+                            {t('main_area.new_block')}
                         </button>
                         <button onClick={downloadPNG} className="download-btn">
-                            下载PNG
+                            {t('main_area.export_as_png')}
                         </button>
                         <div className="bg-color">
-                            <label>背景颜色：</label>
+                            <label>{t('main_area.background_color')}：</label>
                             <input
                                 type="color"
                                 value={backgroundColor}
@@ -896,11 +901,11 @@ const RailSignGenerator: React.FC = () => {
             </div>
             <footer>
                 <h6 style={{ color: 'gray' }}>
-                    部分素材来自
+                    {t('copy').split('https://centralgo.site/vitool/')[0]}
                     <a style={{ color: 'gray' }} href="https://centralgo.site/vitool/">
                         https://centralgo.site/vitool/
                     </a>
-                    ，如有侵权请联系删除
+                    {t('copy').split('https://centralgo.site/vitool/')[1]}
                 </h6>
             </footer>
         </div>

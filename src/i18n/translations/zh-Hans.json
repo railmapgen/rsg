@@ -22,7 +22,7 @@
             "line": "线路",
             "line_space": "线路+空格",
             "terminal_text": "终点文字",
-            "exit_texi": "出口文字",
+            "exit_text": "出口文字",
             "special": "独特属性",
             "specials": {
                 "line_number": "线路编号",

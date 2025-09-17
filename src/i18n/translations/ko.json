@@ -22,7 +22,7 @@
             "line": "노선",
             "line_space": "노선 + 공백",
             "terminal_text": "종점 텍스트",
-            "exit_texi": "출구 텍스트",
+            "exit_text": "출구 텍스트",
             "special": "독특한 속성",
             "specials": {
                 "line_number": "노선 번호",

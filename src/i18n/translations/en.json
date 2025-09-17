@@ -22,7 +22,7 @@
             "line": "Line",
             "line_space": "Line + Space",
             "terminal_text": "Terminal Text",
-            "exit_texi": "Exit Text",
+            "exit_text": "Exit Text",
             "special": "Unique Attributes",
             "specials": {
                 "line_number": "Line Number",

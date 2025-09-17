@@ -22,7 +22,7 @@
             "line": "線路",
             "line_space": "線路+空格",
             "terminal_text": "終點文字",
-            "exit_texi": "出口文字",
+            "exit_text": "出口文字",
             "special": "獨特屬性",
             "specials": {
                 "line_number": "線路編號",

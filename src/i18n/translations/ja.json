@@ -22,7 +22,7 @@
             "line": "路線",
             "line_space": "路線 + スペース",
             "terminal_text": "終点テキスト",
-            "exit_texi": "出口テキスト",
+            "exit_text": "出口テキスト",
             "special": "独特な属性",
             "specials": {
                 "line_number": "路線番号",
