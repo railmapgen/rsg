@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 // 在 signs.tsx 顶部添加
 import './MetroSignGenerator.css';
+import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface BlockData {
     id: number;
@@ -869,6 +870,15 @@ const RailSignGenerator: React.FC = () => {
 
     return (
         <div className="metro-sign-generator">
+            <button
+                onClick={() => {
+                    rmgRuntime.setLanguage('zh-Hans');
+                    location.reload();
+                }}
+            >
+                切换至中文
+            </button>
+            <a>测试使用，请不要对此提交优化性issue</a>
             <h2>{t('main_area.preview')}</h2>
             <div className="preview-container">
                 <SvgPreview />
