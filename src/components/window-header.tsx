@@ -12,7 +12,7 @@ export default function WindowHeader() {
 
     return (
         <RMWindowHeader>
-            <Title>{'Rail Sign Generator'}</Title>
+            <Title>{t('head_bar.project_name')}</Title>
             <RMEnvBadge env={environment} ver={appVersion} />
 
             <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t('Help')} title={t('Help')} ml="auto">

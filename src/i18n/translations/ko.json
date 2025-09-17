@@ -1,10 +1,11 @@
 {
+    "Help": "도움말",
     "head_bar": {
         "project_name": "지하철 안내 표지판 생성기"
     },
     "main_area": {
         "preview": "표지판 미리보기",
-        "new_block": "새 블록 추가",
+        "new_block": "+ 새 블록 추가",
         "export_as_png": "PNG로 다운로드",
         "background_color": "배경색"
     },
@@ -22,7 +23,8 @@
             "line": "노선",
             "line_space": "노선 + 공백",
             "terminal_text": "종점 텍스트",
-            "exit_texi": "출구 텍스트",
+            "terminal_dest": "종점역(행선지)",
+            "exit_text": "출구 텍스트",
             "special": "독특한 속성",
             "specials": {
                 "line_number": "노선 번호",
@@ -30,15 +32,24 @@
                 "terminal_zh": "종점 역(중국어)",
                 "terminal_en": "종점 역(영어)",
                 "text_align": "텍스트 정렬",
+                "line_type": "노선 유형",
                 "align_right": "오른쪽 정렬",
                 "align_center": "가운데 정렬",
                 "align_left": "왼쪽 정렬",
                 "exit_letter": "출구 번호",
                 "exit_lower": "출구 아래 첨자",
                 "exit_zh": "출구(중국어)",
-                "exit_en": "출구(영어)"
+                "exit_en": "출구(영어)",
+                "normal_line": "일반 노선",
+                "loop_line": "순환선",
+                "terminal_station": "종점역"
             }
         }
+    },
+    "prefixes": {
+        "to": "행",
+        "next_station": "다음역",
+        "terminus": "종점역"
     },
     "useful": {
         "yes": "예",

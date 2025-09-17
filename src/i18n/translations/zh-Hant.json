@@ -1,16 +1,17 @@
 {
+    "Help": "幫助",
     "head_bar": {
         "project_name": "地鐵導視生成器"
     },
     "main_area": {
         "preview": "標誌預覽",
-        "new_block": "添加新塊",
-        "export_as_png": "下載png",
+        "new_block": "+ 添加新塊",
+        "export_as_png": "下載PNG",
         "background_color": "背景顏色"
     },
     "blocks": {
         "block": "塊",
-        "cutline": "分割線(右)",
+        "cutline": "分割線（右）",
         "styles": {
             "style": "樣式",
             "single_block": "單格",
@@ -22,7 +23,8 @@
             "line": "線路",
             "line_space": "線路+空格",
             "terminal_text": "終點文字",
-            "exit_texi": "出口文字",
+            "terminal_dest": "終點站(開往)",
+            "exit_text": "出口文字",
             "special": "獨特屬性",
             "specials": {
                 "line_number": "線路編號",
@@ -30,15 +32,24 @@
                 "terminal_zh": "終點站中文",
                 "terminal_en": "終點站英文",
                 "text_align": "對齊方式",
+                "line_type": "線路類型",
                 "align_right": "靠右對齊",
                 "align_center": "居中對齊",
                 "align_left": "靠左對齊",
                 "exit_letter": "出口編號",
                 "exit_lower": "出口下角標",
                 "exit_zh": "出口中文",
-                "exit_en": "出口英文"
+                "exit_en": "出口英文",
+                "normal_line": "普通線",
+                "loop_line": "環線",
+                "terminal_station": "終點站"
             }
         }
+    },
+    "prefixes": {
+        "to": "開往",
+        "next_station": "下一站",
+        "terminus": "終點站"
     },
     "useful": {
         "yes": "是",

@@ -1,11 +1,12 @@
 {
+    "Help": "Help",
     "head_bar": {
-        "project_name": "Subway Signage Generator"
+        "project_name": "Rail Sign Generator"
     },
     "main_area": {
         "preview": "Sign Preview",
         "new_block": "Add New Block",
-        "export_as_png": "Download as PNG",
+        "export_as_png": "Download PNG",
         "background_color": "Background Color"
     },
     "blocks": {
@@ -22,23 +23,33 @@
             "line": "Line",
             "line_space": "Line + Space",
             "terminal_text": "Terminal Text",
-            "exit_texi": "Exit Text",
-            "special": "Unique Attributes",
+            "terminal_dest": "Terminal Station (To)",
+            "exit_text": "Exit Text",
+            "special": "Special Attributes",
             "specials": {
                 "line_number": "Line Number",
                 "line_color": "Line Color",
                 "terminal_zh": "Terminal Station (Chinese)",
                 "terminal_en": "Terminal Station (English)",
                 "text_align": "Text Alignment",
+                "line_type": "Line Type",
                 "align_right": "Align Right",
                 "align_center": "Align Center",
                 "align_left": "Align Left",
                 "exit_letter": "Exit Number",
                 "exit_lower": "Exit Subscript",
                 "exit_zh": "Exit (Chinese)",
-                "exit_en": "Exit (English)"
+                "exit_en": "Exit (English)",
+                "normal_line": "Normal Line",
+                "loop_line": "Loop Line",
+                "terminal_station": "Terminal Station"
             }
         }
+    },
+    "prefixes": {
+        "to": "To",
+        "next_station": "Next Station",
+        "terminus": "Terminus"
     },
     "useful": {
         "yes": "Yes",

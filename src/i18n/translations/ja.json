@@ -1,10 +1,11 @@
 {
+    "Help": "ヘルプ",
     "head_bar": {
         "project_name": "地下鉄案内標識生成器"
     },
     "main_area": {
         "preview": "標識プレビュー",
-        "new_block": "新しいブロックを追加",
+        "new_block": "+ 新しいブロックを追加",
         "export_as_png": "PNGとしてダウンロード",
         "background_color": "背景色"
     },
@@ -22,7 +23,8 @@
             "line": "路線",
             "line_space": "路線 + スペース",
             "terminal_text": "終点テキスト",
-            "exit_texi": "出口テキスト",
+            "terminal_dest": "終点駅（行き先）",
+            "exit_text": "出口テキスト",
             "special": "独特な属性",
             "specials": {
                 "line_number": "路線番号",
@@ -30,15 +32,24 @@
                 "terminal_zh": "終点駅（中国語）",
                 "terminal_en": "終点駅（英語）",
                 "text_align": "テキストの配置",
+                "line_type": "路線タイプ",
                 "align_right": "右寄せ",
                 "align_center": "中央寄せ",
                 "align_left": "左寄せ",
                 "exit_letter": "出口番号",
                 "exit_lower": "出口の下付き文字",
                 "exit_zh": "出口（中国語）",
-                "exit_en": "出口（英語）"
+                "exit_en": "出口（英語）",
+                "normal_line": "通常路線",
+                "loop_line": "環状線",
+                "terminal_station": "終点駅"
             }
         }
+    },
+    "prefixes": {
+        "to": "行き",
+        "next_station": "次駅",
+        "terminus": "終点駅"
     },
     "useful": {
         "yes": "はい",
