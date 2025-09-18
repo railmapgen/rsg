@@ -6,6 +6,7 @@
   font-weight: 30; /* 字体粗细，400表示常规 */
   src:
     url('/font/SourceHanSansCN-Normal.otf') format('opentype'); /* TTF格式 */
+    
 }
 
 /* 使用字体 */
