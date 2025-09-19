@@ -36,7 +36,11 @@
                 "exit_letter": "出口番号",
                 "exit_lower": "出口の下付き文字",
                 "exit_zh": "出口（中国語）",
-                "exit_en": "出口（英語）"
+                "exit_en": "出口（英語）",
+                "line_type": "路線種別",
+                "normal_line": "普通線",
+                "loop_line": "環状線",
+                "terminal_station": "終点駅"
             }
         }
     },
@@ -45,4 +49,4 @@
         "no": "いいえ"
     },
     "copy": "一部の素材はhttps://centralgo.site/vitool/より提供されています。侵害がある場合は削除のためご連絡ください。"
-}
+    }

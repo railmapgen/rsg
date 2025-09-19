@@ -36,7 +36,11 @@
                 "exit_letter": "Exit Number",
                 "exit_lower": "Exit Subscript",
                 "exit_zh": "Exit (Chinese)",
-                "exit_en": "Exit (English)"
+                "exit_en": "Exit (English)",
+                "line_type": "Line Type",
+                "normal_line": "Normal Line",
+                "loop_line": "Loop Line",
+                "terminal_station": "Terminal Station"
             }
         }
     },

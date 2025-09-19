@@ -36,7 +36,11 @@
                 "exit_letter": "출구 번호",
                 "exit_lower": "출구 아래 첨자",
                 "exit_zh": "출구(중국어)",
-                "exit_en": "출구(영어)"
+                "exit_en": "출구(영어)",
+                "line_type": "노선 유형",
+                "normal_line": "일반 노선",
+                "loop_line": "순환 노선",
+                "terminal_station": "종점 역"
             }
         }
     },

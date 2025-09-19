@@ -36,7 +36,11 @@
                 "exit_letter": "出口編號",
                 "exit_lower": "出口下角標",
                 "exit_zh": "出口中文",
-                "exit_en": "出口英文"
+                "exit_en": "出口英文",
+                "line_type": "線路類型",
+                "normal_line": "普通線",
+                "loop_line": "環線",
+                "terminal_station": "終點站"
             }
         }
     },

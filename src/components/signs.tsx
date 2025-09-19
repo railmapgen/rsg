@@ -622,14 +622,14 @@ const RailSignGenerator: React.FC = () => {
 
                     // 确定前缀文本
                     let prefixChinese = '';
-                    let prefixEnglish = t('prefixes.to');
+                    let prefixEnglish = 'To';
                     if (lineType === 'LOOP') {
-                        prefixChinese = t('prefixes.next_station');
+                        prefixChinese = '下一站';
                     } else if (lineType === 'T') {
-                        prefixChinese = t('prefixes.terminus');
-                        prefixEnglish = t('prefixes.terminus');
+                        prefixChinese = '终点站';
+                        prefixEnglish = 'terminus';
                     } else {
-                        prefixChinese = t('prefixes.to');
+                        prefixChinese = '开往';
                     }
 
                     // 计算文本位置
@@ -878,7 +878,7 @@ const RailSignGenerator: React.FC = () => {
             >
                 切换至中文
             </button>
-            <a>测试使用，请不要对此提交优化性issue</a>
+            <a>公测临时使用，请不要对此按钮提交优化性issue</a>
             <h2>{t('main_area.preview')}</h2>
             <div className="preview-container">
                 <SvgPreview />
