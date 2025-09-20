@@ -42,7 +42,7 @@ export default function WindowHeader() {
                     </Menu.Dropdown>
                 </Menu>
             )}
-            <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t('Help')} title={t('Help')} ml="auto">
+            <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t('Help')} title={t('Help')}>
                 <MdOutlineHelpOutline />
             </ActionIcon>
         </RMWindowHeader>
