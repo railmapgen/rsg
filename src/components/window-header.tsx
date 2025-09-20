@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 import { MdOutlineHelpOutline, MdTranslate } from 'react-icons/md';
 import { RMEnvBadge, RMWindowHeader } from '@railmapgen/mantine-components';
-import { ActionIcon, Flex, Title } from '@mantine/core';
-import { IconButton, Menu, MenuButton, MenuItem, MenuList, HStack, flexbox } from '@chakra-ui/react';
+import { ActionIcon, Title } from '@mantine/core';
+import { IconButton, Menu, MenuButton, MenuItem, MenuList, HStack } from '@chakra-ui/react';
 import { LANGUAGE_NAMES, LanguageCode } from '@railmapgen/rmg-translate';
 
 export default function WindowHeader() {
