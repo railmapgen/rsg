@@ -3,7 +3,6 @@ import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 // 在 signs.tsx 顶部添加
 import './MetroSignGenerator.css';
-import rmgRuntime from '@railmapgen/rmg-runtime';
 
 interface BlockData {
     id: number;
