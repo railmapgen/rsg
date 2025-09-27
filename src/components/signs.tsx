@@ -870,15 +870,6 @@ const RailSignGenerator: React.FC = () => {
 
     return (
         <div className="metro-sign-generator">
-            <button
-                onClick={() => {
-                    rmgRuntime.setLanguage('zh-Hans');
-                    location.reload();
-                }}
-            >
-                切换至中文
-            </button>
-            <a>公测临时使用，请不要对此按钮提交优化性issue</a>
             <h2>{t('main_area.preview')}</h2>
             <div className="preview-container">
                 <SvgPreview />

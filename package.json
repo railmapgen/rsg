@@ -7,16 +7,12 @@
     },
     "license": "GPL-3.0-only",
     "dependencies": {
-        "@chakra-ui/react": "^2.10.9",
-        "@emotion/react": "^11.10.0",
-        "@emotion/styled": "^11.10.0",
         "@mantine/core": "^7.17.1",
         "@mantine/hooks": "^7.17.1",
         "@railmapgen/mantine-components": "^0.1.15",
         "@railmapgen/rmg-runtime": "^11.0.1",
         "@railmapgen/rmg-translate": "^3.4.3",
         "@reduxjs/toolkit": "^2.6.0",
-        "framer-motion": "^6.5.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-i18next": "^15.4.1",
@@ -44,7 +40,7 @@
         "prettier": "^3.5.3",
         "typescript": "^5.8.2",
         "typescript-eslint": "^8.26.0",
-        "vite": "^6.3.5",
+        "vite": "^6.3.6",
         "vitest": "^3.0.8"
     },
     "scripts": {
@@ -55,5 +51,5 @@
         "lint:fix": "eslint ./src --fix",
         "preview": "vite preview"
     },
-    "version": "1.2.4"
+    "version": "1.2.5"
 }
