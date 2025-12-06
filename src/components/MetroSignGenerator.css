@@ -126,9 +126,9 @@ body {
 .block-config {
   background: #f9fbfd;
   border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
   border: 1px solid #e1e8ed;
+  width: 125px;
+  display: inline-block;
 }
 
 .block-header {
@@ -242,7 +242,6 @@ body {
   cursor: pointer;
   font-size: 16px;
   margin-right: 8px;
-  width: 24px;
   height: 24px;
   display: inline-flex;
   align-items: center;
@@ -278,4 +277,27 @@ body {
   .radio-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.blocks-container {
+  display: flex; /* 设置为flex容器 */
+  gap: 20px; /* 两个div之间的间距 */
+  width: 100%; /* 容器宽度 */
+  flex-direction: column; /* 垂直排列（默认是row水平） */
+}
+
+.blocks-box {
+  flex: 1; /* 两个div平均分配容器宽度 */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.blocks-box-name {
+  flex-direction: column; /* 垂直排列（默认是row水平） */
+  display: flex;
+  flex: 0 0 20%;
+}
+
+.blocks-box-specials {
+  flex: 0 0 70%;
 }

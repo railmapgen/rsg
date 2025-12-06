@@ -48,5 +48,23 @@
         "yes": "Yes",
         "no": "No"
     },
+    "styleToText":{
+        "Exit": "Exit",
+        "toilet": "Restroom",
+        "blank1": "Empty",
+        "Line": "Line",
+        "Line-space": "Line + Space",
+        "ExitText": "Exit Text",
+        "To": "Bound for",
+        "blank2": "Empty",
+        "↗": "↗",
+        "↘": "↘",
+        "↑": "↑",
+        "↓": "↓",
+        "←": "←",
+        "→": "→",
+        "↙": "↙",
+        "↖": "↖"
+    },
     "copy": "Some materials are from https://centralgo.site/vitool/. Please contact us for removal if there is any infringement."
 }
