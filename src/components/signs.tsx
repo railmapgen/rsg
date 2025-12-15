@@ -496,7 +496,7 @@ const RailSignGenerator: React.FC = () => {
                                 key={`${block.id}-text1`}
                                 x={xPos + 10}
                                 y={120}
-                                fontFamily="Noto Sans SC"
+                                fontFamily="Arial"
                                 fontSize={35}
                                 fill="white"
                                 fontWeight={500}
@@ -531,7 +531,7 @@ const RailSignGenerator: React.FC = () => {
                                 key={`${block.id}-text1`}
                                 x={xPos + 25}
                                 y={120}
-                                fontFamily="Noto Sans SC"
+                                fontFamily="Arial"
                                 fontSize={35}
                                 fill="white"
                                 fontWeight={500}
@@ -566,7 +566,7 @@ const RailSignGenerator: React.FC = () => {
                                 key={`${block.id}-text1`}
                                 x={xPos + 40}
                                 y={120}
-                                fontFamily="Noto Sans SC"
+                                fontFamily="Arial"
                                 fontSize={35}
                                 fill="white"
                                 fontWeight={500}
@@ -617,7 +617,7 @@ const RailSignGenerator: React.FC = () => {
                             key={`${block.id}-text1`}
                             x={xPos}
                             y={85}
-                            fontFamily="Noto Sans SC"
+                            fontFamily="Arial"
                             fontSize={90}
                             fill="white"
                             fontWeight={500}
@@ -628,7 +628,7 @@ const RailSignGenerator: React.FC = () => {
                             key={`${block.id}-text2`}
                             x={xPos + 256}
                             y={85}
-                            fontFamily="Noto Sans SC"
+                            fontFamily="Arial"
                             fontSize={25}
                             fill="white"
                             fontWeight={500}
@@ -669,7 +669,7 @@ const RailSignGenerator: React.FC = () => {
                             key={`${block.id}-text1`}
                             x={xPos + 20}
                             y={85}
-                            fontFamily="Noto Sans SC"
+                            fontFamily="Arial"
                             fontSize={90}
                             fill="white"
                             fontWeight={500}
@@ -680,7 +680,7 @@ const RailSignGenerator: React.FC = () => {
                             key={`${block.id}-text2`}
                             x={xPos + 236}
                             y={85}
-                            fontFamily="Noto Sans SC"
+                            fontFamily="Arial"
                             fontSize={25}
                             fill="white"
                             fontWeight={500}
@@ -715,7 +715,7 @@ const RailSignGenerator: React.FC = () => {
                             key={`${block.id}-text1`}
                             x={exitSubscript ? xPos + 20 : xPos + 32}
                             y={105}
-                            fontFamily="Noto Sans SC"
+                            fontFamily="Arail"
                             fontSize={120}
                             fill="white"
                         >
@@ -725,7 +725,7 @@ const RailSignGenerator: React.FC = () => {
                             key={`${block.id}-text2`}
                             x={xPos + 98}
                             y={107}
-                            fontFamily="Noto Sans SC"
+                            fontFamily="Arial"
                             fontSize={40}
                             fill="white"
                         >
@@ -745,7 +745,7 @@ const RailSignGenerator: React.FC = () => {
                             key={`${block.id}-text4`}
                             x={xPos + 130}
                             y={103}
-                            fontFamily="Noto Sans SC"
+                            fontFamily="Arial"
                             fontSize={30}
                             fill="white"
                         >
@@ -768,7 +768,7 @@ const RailSignGenerator: React.FC = () => {
                         prefixChinese = '下一站';
                     } else if (lineType === 'T') {
                         prefixChinese = '终点站';
-                        prefixEnglish = 'terminus';
+                        prefixEnglish = 'Terminus';
                     } else {
                         prefixChinese = '开往';
                     }
@@ -819,7 +819,7 @@ const RailSignGenerator: React.FC = () => {
                                     key={`${block.id}-text2`}
                                     x={align === 'R' ? rightX : align === 'C' ? centerX : leftX}
                                     y={103}
-                                    fontFamily="Noto Sans SC"
+                                    fontFamily="Arial"
                                     fontSize={30}
                                     fill="white"
                                     textAnchor={align === 'R' ? 'end' : align === 'C' ? 'middle' : 'start'}
@@ -833,7 +833,7 @@ const RailSignGenerator: React.FC = () => {
                                     key={`${block.id}-text2`}
                                     x={align === 'R' ? rightX : align === 'C' ? centerX : leftX}
                                     y={103}
-                                    fontFamily="Noto Sans SC"
+                                    fontFamily="Arial"
                                     fontSize={30}
                                     fill="white"
                                     textAnchor={align === 'R' ? 'end' : align === 'C' ? 'middle' : 'start'}
