@@ -81,6 +81,16 @@ const specialStyleConfigs: Record<string, SpecialStyleConfig[]> = {
         },
     ],
 };
+const arrowMap: Record<string, { href: string; rotation: number }> = {
+    '↗': { href: 'logos/arrow-45.svg', rotation: 270 },
+    '↙': { href: 'logos/arrow-45.svg', rotation: 90 },
+    '↖': { href: 'logos/arrow-45.svg', rotation: 180 },
+    '↘': { href: 'logos/arrow-45.svg', rotation: 0 },
+    '→': { href: 'logos/arrow.svg', rotation: 0 },
+    '←': { href: 'logos/arrow.svg', rotation: 180 },
+    '↑': { href: 'logos/arrow.svg', rotation: 270 },
+    '↓': { href: 'logos/arrow.svg', rotation: 90 },
+};
 
 export type { BlockData, SpecialStyleConfig };
-export { specialStyleConfigs };
+export { specialStyleConfigs, arrowMap };

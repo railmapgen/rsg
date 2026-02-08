@@ -1,7 +1,7 @@
 // SvgPreview.tsx
 import React from 'react';
 import { BlockData } from './types';
-import { getBlockWidth, calculateBlockPositions, calculateSvgWidth } from './utils';
+import { getBlockWidth } from './utils';
 import { arrowMap } from './configs';
 
 interface SvgPreviewProps {
@@ -18,8 +18,14 @@ interface SvgPreviewProps {
  * 3. 渲染分割线（若开启）
  */
 export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor, svgRef }) => {
-    const blockPositions = calculateBlockPositions(blocks);
-    const svgWidth = calculateSvgWidth(blockPositions);
+    const blockPositions = blocks.reduce((positions, block, index) => {
+        const prevPosition = positions[index - 1] || 0;
+        const blockWidth = getBlockWidth(block.style);
+        return [...positions, prevPosition + blockWidth];
+    }, [] as number[]);
+
+    // SVG总宽度（所有块宽度之和）
+    const svgWidth = blockPositions[blockPositions.length - 1] || 0;
     let currentX = 0;
 
     const svgElements = blocks.flatMap(block => {
@@ -28,9 +34,24 @@ export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor,
         const xPos = currentX;
         currentX += blockWidth;
 
+        const exit_align = block.specialStyles[`${block.id}-0`] || 'C';
+        const lineNum = block.specialStyles[`${block.id}-0`] || '10';
+        const lineColor = block.specialStyles[`${block.id}-1`] || '#00a3c2';
+        const exitLetter = block.specialStyles[`${block.id}-0`] || 'A';
+        const exitSubscript = block.specialStyles[`${block.id}-1`] || '';
+        const exitChinese = block.specialStyles[`${block.id}-2`] || '蓝靛靛厂南路';
+        const exitEnglish = block.specialStyles[`${block.id}-3`] || 'Landianchang South Rd.';
+        const toChinese = block.specialStyles[`${block.id}-0`] || '';
+        const toEnglish = block.specialStyles[`${block.id}-1`] || '';
+        const align = block.specialStyles[`${block.id}-2`] || 'R';
+        const lineType = block.specialStyles[`${block.id}-3`] || 'NM';
+        let prefixChinese = '';
+        let prefixEnglish = 'To';
+        const centerX = xPos + blockWidth / 2;
+        const rightX = xPos + blockWidth - 10;
+        const leftX = xPos + 10;
         switch (block.style) {
             case 'Exit':
-                const exit_align = block.specialStyles[`${block.id}-0`] || '';
                 if (exit_align === 'L') {
                     blockElements.push(
                         <rect key={`${block.id}-rect`} x={xPos} y={0} width={98} height={128} fill="#00aa52" />,
@@ -124,8 +145,6 @@ export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor,
                 break;
 
             case 'Line':
-                const lineNum = block.specialStyles[`${block.id}-0`] || '10';
-                const lineColor = block.specialStyles[`${block.id}-1`] || '#00a3c2';
                 blockElements.push(
                     <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={lineColor} />,
                     <text
@@ -167,10 +186,8 @@ export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor,
                 break;
 
             case 'Line-space':
-                const lineNum2 = block.specialStyles[`${block.id}-0`] || '10';
-                const lineColor2 = block.specialStyles[`${block.id}-1`] || '#00a3c2';
                 blockElements.push(
-                    <rect key={`${block.id}-rect`} x={xPos + 20} y={90} width={216} height={38} fill={lineColor2} />,
+                    <rect key={`${block.id}-rect`} x={xPos + 20} y={90} width={216} height={38} fill={lineColor} />,
                     <text
                         key={`${block.id}-text1`}
                         x={xPos + 20}
@@ -180,7 +197,7 @@ export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor,
                         fill="white"
                         fontWeight={500}
                     >
-                        {lineNum2}
+                        {lineNum}
                     </text>,
                     <text
                         key={`${block.id}-text2`}
@@ -192,7 +209,7 @@ export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor,
                         fontWeight={500}
                         textAnchor="end"
                     >
-                        {parseInt(lineNum2) >= 10 ? `Line ${lineNum2}` : `Line ${lineNum2}`}
+                        {parseInt(lineNum) >= 10 ? `Line ${lineNum}` : `Line ${lineNum}`}
                     </text>,
                     <text
                         key={`${block.id}-text3`}
@@ -210,10 +227,6 @@ export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor,
                 break;
 
             case 'ExitText':
-                const exitLetter = block.specialStyles[`${block.id}-0`] || 'A';
-                const exitSubscript = block.specialStyles[`${block.id}-1`] || '';
-                const exitChinese = block.specialStyles[`${block.id}-2`] || '蓝靛靛厂南路';
-                const exitEnglish = block.specialStyles[`${block.id}-3`] || 'Landianchang South Rd.';
                 blockElements.push(
                     <text
                         key={`${block.id}-text1`}
@@ -252,12 +265,6 @@ export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor,
                 break;
 
             case 'To':
-                const toChinese = block.specialStyles[`${block.id}-0`] || '';
-                const toEnglish = block.specialStyles[`${block.id}-1`] || '';
-                const align = block.specialStyles[`${block.id}-2`] || 'R';
-                const lineType = block.specialStyles[`${block.id}-3`] || 'NM';
-                let prefixChinese = '';
-                let prefixEnglish = 'To';
                 if (lineType === 'LOOP') {
                     prefixChinese = '下一站';
                 } else if (lineType === 'T') {
@@ -266,9 +273,6 @@ export const SvgPreview: React.FC<SvgPreviewProps> = ({ blocks, backgroundColor,
                 } else {
                     prefixChinese = '开往';
                 }
-                const centerX = xPos + blockWidth / 2;
-                const rightX = xPos + blockWidth - 10;
-                const leftX = xPos + 10;
                 if (prefixChinese || toChinese) {
                     if (lineType === 'T')
                         blockElements.push(
