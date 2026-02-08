@@ -252,9 +252,9 @@ body {
 .preview-container {
   overflow-x: auto;
   width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 8px;
+  padding: 1px;
+  position: fixed;  /* 核心：固定定位 */
+  top: 0; 
 }
 
 /* 响应式设计 */
@@ -300,4 +300,8 @@ body {
 
 .blocks-box-specials {
   flex: 0 0 70%;
+}
+
+.placeholder {
+  height: 170px; /* 占位符高度，保持与预览区一致 */
 }

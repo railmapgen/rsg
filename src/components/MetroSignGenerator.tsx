@@ -1,55 +1,19 @@
 /* eslint-disable no-case-declarations */
+// 导入拖拽上下文和定位算法（dnd-kit）
 // 导入React核心依赖：useState(状态管理)、useRef(获取DOM/持久化变量)
 import React, { useState, useRef } from 'react';
 // 导入国际化翻译钩子，支持多语言切换（react-i18next）
-import { useTranslation } from 'react-i18next';
 // 导入组件专属样式文件
 import './MetroSignGenerator.css';
-
-/**
- * 导视块数据结构接口
- * 每个导视块对应地铁导视牌上的一个独立功能模块（如出口、线路、终点站、箭头等）
- */
-interface BlockData {
-    id: number; // 导视块唯一标识ID（自增）
-    style: string; // 导视块样式类型（如Exit/Line/To/箭头等）
-    cutLine: boolean; // 是否显示黄色分割竖线
-    specialStyles: Record<string, string>; // 该块的特殊样式参数（键值对存储自定义配置）
-    collapsed: boolean; // 配置面板折叠状态（true=展开，false=折叠）
-}
-
-/**
- * 特殊样式配置项接口
- * 定义不同导视块样式对应的可配置参数规则
- */
-interface SpecialStyleConfig {
-    type: 'number' | 'text' | 'radio'; // 输入控件类型：数字/文本/单选框
-    label: string; // 配置项标签（国际化文本）
-    defaultValue: string; // 默认值
-    options?: { value: string; label: string }[]; // 单选框选项（仅radio类型需要）
-    maxLength?: number; // 文本输入框最大长度（仅text类型可选）
-}
-
+import { BlockData, specialStyleConfigs } from './configs';
+import { useTranslation } from 'react-i18next';
 /**
  * 工具函数：根据导视块样式计算像素宽度
  * 地铁导视牌采用"标准格"设计：1标准格=128px，不同样式占用不同格数
  * @param style 导视块样式类型
  * @returns 该样式对应的像素宽度
  */
-const getBlockWidth = (style: string): number => {
-    switch (style) {
-        case 'ExitText': // 出口文本块（4个标准格）
-            return 512;
-        case 'Line': // 线路块（2个标准格）
-        case 'Line-space': // 带间距线路块（2个标准格）
-        case 'blank2': // 2格空白块（2个标准格）
-            return 256;
-        case 'To': // 终点站文本块（2.5个标准格）
-            return 256 + 128;
-        default: // 基础块（1个标准格：出口logo/箭头/卫生间/1格空白）
-            return 128;
-    }
-};
+import { getBlockWidth } from './utils';
 
 /**
  * 核心组件：地铁导视牌生成器
@@ -61,13 +25,12 @@ const getBlockWidth = (style: string): number => {
  * 5. 支持多语言切换（基于react-i18n）
  */
 const RailSignGenerator: React.FC = () => {
-    // 国际化翻译钩子，t函数用于获取对应语言的文本
     const { t } = useTranslation();
-
+    // 国际化翻译钩子，t函数用于获取对应语言的文本
     // ===== 核心状态管理 =====
     // 导视块列表（初始默认1个出口logo块）
     const [blocks, setBlocks] = useState<BlockData[]>([
-        { id: 1, style: 'Exit', cutLine: false, specialStyles: {}, collapsed: false },
+        { id: 1, style: 'Exit', cutLine: false, specialStyles: {}, collapsed: false, isDragging: false },
     ]);
     // 下一个新增导视块的ID（自增，避免重复）
     const [nextId, setNextId] = useState(2);
@@ -85,69 +48,6 @@ const RailSignGenerator: React.FC = () => {
     );
 
     /**
-     * 特殊样式配置映射表
-     * 键：导视块样式类型 | 值：该样式对应的可配置参数列表
-     * 每个参数对应界面上的一个输入控件，动态生成
-     */
-    const specialStyleConfigs: Record<string, SpecialStyleConfig[]> = {
-        // 出口Logo块（EXIT/出）配置
-        Exit: [
-            {
-                type: 'radio',
-                label: t('blocks.styles.specials.text_align'), // 文本对齐方式
-                defaultValue: 'C',
-                options: [
-                    { value: 'R', label: t('blocks.styles.specials.align_right') }, // 右对齐
-                    { value: 'L', label: t('blocks.styles.specials.align_left') }, // 左对齐
-                    { value: 'C', label: t('blocks.styles.specials.align_center') }, // 居中对齐
-                ],
-            },
-        ],
-        // 线路块配置
-        Line: [
-            { type: 'number', label: t('blocks.styles.specials.line_number'), defaultValue: '10' }, // 线路号
-            { type: 'text', label: t('blocks.styles.specials.line_color'), defaultValue: '#00a3c2' }, // 线路颜色
-        ],
-        // 带间距线路块配置（布局不同，参数同Line）
-        'Line-space': [
-            { type: 'number', label: t('blocks.styles.specials.line_number'), defaultValue: '10' },
-            { type: 'text', label: t('blocks.styles.specials.line_color'), defaultValue: '#00a3c2' },
-        ],
-        // 出口文本块（如：A口 蓝靛厂南路）配置
-        ExitText: [
-            { type: 'text', label: t('blocks.styles.specials.exit_letter'), defaultValue: 'A', maxLength: 1 }, // 出口字母（A/B/C）
-            { type: 'text', label: t('blocks.styles.specials.exit_lower'), defaultValue: '', maxLength: 1 }, // 出口下标（如A1的1）
-            { type: 'text', label: t('blocks.styles.specials.exit_zh'), defaultValue: '蓝靛厂南路' }, // 出口中文名称
-            { type: 'text', label: t('blocks.styles.specials.exit_en'), defaultValue: 'Landianchang South Rd.' }, // 出口英文名称
-        ],
-        // 终点站文本块（开往/终点站 宛平城）配置
-        To: [
-            { type: 'text', label: t('blocks.styles.specials.terminal_zh'), defaultValue: '宛平城' }, // 终点站中文
-            { type: 'text', label: t('blocks.styles.specials.terminal_en'), defaultValue: 'Wanpingcheng' }, // 终点站英文
-            {
-                type: 'radio',
-                label: t('blocks.styles.specials.text_align'), // 文本对齐方式
-                defaultValue: 'R',
-                options: [
-                    { value: 'R', label: t('blocks.styles.specials.align_right') },
-                    { value: 'L', label: t('blocks.styles.specials.align_left') },
-                    { value: 'C', label: t('blocks.styles.specials.align_center') }, // 居中对齐
-                ],
-            },
-            {
-                type: 'radio',
-                label: t('blocks.styles.specials.line_type'), // 线路类型
-                defaultValue: 'NM',
-                options: [
-                    { value: 'NM', label: t('blocks.styles.specials.normal_line') }, // 普通线路（开往）
-                    { value: 'LOOP', label: t('blocks.styles.specials.loop_line') }, // 环线（下一站）
-                    { value: 'T', label: t('blocks.styles.specials.terminal_station') }, // 终点站
-                ],
-            },
-        ],
-    };
-
-    /**
      * 添加新的导视块
      * 新块默认样式为Exit，初始状态为折叠，ID自增
      */
@@ -158,6 +58,7 @@ const RailSignGenerator: React.FC = () => {
             cutLine: false,
             specialStyles: {},
             collapsed: false, // 新增块默认折叠
+            isDragging: false,
         };
 
         // 不可变更新数组（React状态更新规范）
@@ -257,7 +158,7 @@ const RailSignGenerator: React.FC = () => {
             if (config.type === 'text') {
                 return (
                     <div key={key} className="special-input">
-                        <label>{config.label}:</label>
+                        <label>{t(config.label)}:</label>
                         <input
                             type="text"
                             value={value}
@@ -273,7 +174,7 @@ const RailSignGenerator: React.FC = () => {
             if (config.type === 'number') {
                 return (
                     <div key={key} className="special-input">
-                        <label>{config.label}:</label>
+                        <label>{t(config.label)}:</label>
                         <input
                             type="number"
                             value={value}
@@ -288,7 +189,7 @@ const RailSignGenerator: React.FC = () => {
             if (config.type === 'radio' && config.options) {
                 return (
                     <div key={key} className="special-input">
-                        <label>{config.label}:</label>
+                        <label>{t(config.label)}:</label>
                         <div className="radio-group">
                             {config.options.map(option => (
                                 <label key={option.value}>
@@ -299,7 +200,7 @@ const RailSignGenerator: React.FC = () => {
                                         checked={value === option.value}
                                         onChange={() => updateSpecialStyle(block.id, key, option.value)}
                                     />
-                                    {option.label}
+                                    {t(option.label)}
                                 </label>
                             ))}
                         </div>
@@ -1030,13 +931,14 @@ const RailSignGenerator: React.FC = () => {
     return (
         <div className="metro-sign-generator">
             {/* 预览区标题 */}
-            <h2>{t('main_area.preview')}</h2>
+            {/* <h2>{t('main_area.preview')}</h2> */}
             {/* SVG预览容器 */}
             <div className="preview-container">
                 <SvgPreview />
             </div>
 
             {/* 操作区容器 */}
+            <div className="placeholder"></div>
             <div className="container">
                 <div className="controls">
                     {/* 功能按钮区：添加块、导出PNG、背景色设置 */}

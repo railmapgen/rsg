@@ -5,7 +5,7 @@ import WindowHeader from './window-header';
 //import { useTranslation } from 'react-i18next';
 import { RMMantineProvider, RMPage, RMPageBody, /*RMPageHeader,*/ RMWindow } from '@railmapgen/mantine-components';
 //import { Button, Text, TextInput } from '@mantine/core';
-import RailSignGenerator from './signs';
+import RailSignGenerator from './MetroSignGenerator';
 //import React from 'react';
 
 export default function AppRoot() {
