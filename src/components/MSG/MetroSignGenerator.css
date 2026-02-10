@@ -75,6 +75,7 @@ body {
   border-radius: 8px;
   padding: 20px;
   overflow-x: auto;
+  z-index: 10000;
 }
 
 .actions {
@@ -214,7 +215,7 @@ body {
   background: #eef7ff;
   padding: 15px;
   border-radius: 8px;
-  border-left: 3px solid #00a3c2;
+  border-left: 3px solid #00a9c6;
 }
 
 .special-input {
@@ -236,7 +237,7 @@ body {
   box-sizing: border-box;
 }
 
-.collapse-btn {
+/* .collapse-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -247,7 +248,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0;
-}
+} */
 
 .preview-container {
   overflow-x: auto;
@@ -279,29 +280,69 @@ body {
   }
 }
 
+/* 容器整体 - 如需blocks-container下的blocks-box也并排，可调整此属性 */
 .blocks-container {
-  display: flex; /* 设置为flex容器 */
-  gap: 20px; /* 两个div之间的间距 */
-  width: 100%; /* 容器宽度 */
-  flex-direction: column; /* 垂直排列（默认是row水平） */
+  display: flex; 
+  gap: 20px; 
+  width: 100%; 
+  /* 若需要blocks-container内的blocks-box垂直排列则保留column，否则改为row */
+  /* flex-direction: column;  */
+  flex-direction: row; /* 可选：如果blocks-container下的多个blocks-box也要并排 */
+  flex-wrap: wrap; /* 适配小屏幕自动换行 */
 }
 
 .blocks-box {
-  flex: 1; /* 两个div平均分配容器宽度 */
+  flex: 1; 
   padding: 20px;
   box-sizing: border-box;
+  display: flex !important;
+  flex-direction: column !important; /* 强制垂直：name在上，specials在下 */
+  align-items: flex-start;
+  gap: 15px; /* name和specials之间的垂直间距 */
+  width: 100%;
 }
 
+/* blocks-box-name：内部元素水平并排 */
 .blocks-box-name {
-  flex-direction: column; /* 垂直排列（默认是row水平） */
-  display: flex;
-  flex: 0 0 20%;
+  display: flex !important;
+  flex-direction: row !important; /* 内部元素左右并排 */
+  align-items: center; /* 内部元素垂直居中 */
+  gap: 10px; /* 内部元素之间的水平间距 */
+  width: 100%; /* 占满父容器宽度 */
+  flex-wrap: wrap; /* 小屏自动换行 */
 }
 
+/* blocks-box-specials：保持原有垂直（可根据需要调整） */
+.blocks-box-specials {
+  display: flex;
+  flex-direction: column; /* 内部垂直，和name区分开 */
+  gap: 10px; /* 内部元素垂直间距 */
+  width: 100%; /* 占满父容器宽度 */
+}
+
+/* 响应式兼容（仅优化间距，不改变核心布局） */
+@media (max-width: 600px) {
+  .actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .radio-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .blocks-box-name {
+    gap: 8px; /* 小屏缩小内部间距 */
+  }
+}
 .blocks-box-specials {
   flex: 0 0 70%;
 }
 
 .placeholder {
   height: 170px; /* 占位符高度，保持与预览区一致 */
+}
+
+.card.dragging {
+    transition: none !important;
 }

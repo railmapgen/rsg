@@ -42,7 +42,14 @@ export default function WindowHeader() {
                     </Menu.Dropdown>
                 </Menu>
             )}
-            <ActionIcon variant="subtle" color="gray" size="sm" aria-label={t('Help')} title={t('Help')}>
+            <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="sm"
+                aria-label={t('Help')}
+                title={t('Help')}
+                onClick={() => window.open('')}
+            >
                 <MdOutlineHelpOutline />
             </ActionIcon>
         </RMWindowHeader>
