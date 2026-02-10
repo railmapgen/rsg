@@ -117,15 +117,13 @@ import React from 'react';
 export const PaletteIframe: React.FC<{ url: string; display?: boolean }> = ({ url, display = false }) => {
     return (
         <div className="colorPicker-mask">
-            <div className="colorPicker">
-                <iframe
-                    src={url}
-                    style={{ width: '100%', height: '100%', border: 'none', display: display ? 'block' : 'none' }}
-                    loading="eager"
-                    title="调色板"
-                    className="colorPaddle"
-                />
-            </div>
+            <iframe
+                src={url}
+                style={{ width: '100%', height: '100%', border: 'none', display: display ? 'block' : 'none' }}
+                loading="eager"
+                title="调色板"
+                className="colorPicker"
+            />
         </div>
     );
 };
