@@ -28,7 +28,7 @@ import { JSX } from 'react/jsx-runtime';
 import { Button, Input } from '@mantine/core';
 import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import { PaletteModalHelper, Theme } from '../utils/PaletteModalHelper';
+import { PaletteIframe, PaletteModalHelper, Theme } from '../utils/PaletteModalHelper';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
 /**
@@ -41,47 +41,39 @@ import rmgRuntime from '@railmapgen/rmg-runtime';
  * 5. 支持多语言切换（基于react-i18n）
  */
 const MetroSignGenerator: React.FC = () => {
+    // 1. 控制弹窗显示/隐藏
     const [isOpen, setIsOpen] = useState(false);
-    // 2. 存储最终选中的颜色（用户点确定后生效）
-    const [finalColor, setFinalColor] = useState<Theme | null>(null);
-    // 3. 通信助手实例（用 useRef 保证唯一，支持多次复用）
+    // 2. 存储最终确认的颜色（内部确定按钮触发）
+    const [confirmedColor, setConfirmedColor] = useState<Theme | null>(null);
+    // 3. 通信助手实例（useRef 保证唯一，支持多次复用）
     const paletteHelper = useRef(new PaletteModalHelper());
-    // 打开弹窗：初始化通信
+
+    // 打开弹窗：初始化通信 + 发送默认颜色
     const handleOpen = () => {
         setIsOpen(true);
-        // 每次打开都重新初始化通信
-        paletteHelper.current.init(
-            (theme: unknown) => {
-                // 选色回调：仅更新临时选中状态，不关闭弹窗
+
+        // 初始化通信，监听调色板内部事件
+        paletteHelper.current.init({
+            onSelect: theme => {
+                // 调色板内临时选色（仅日志，不保存）
                 console.log('临时选中颜色：', theme);
             },
-            () => {
-                // 调色板内部触发关闭时，同步关闭弹窗
+            onConfirm: theme => {
+                // 调色板内点击确定：保存最终颜色
+                setConfirmedColor(theme);
+                alert(`已确认选择颜色：${theme[2]}`);
+            },
+            onClose: () => {
+                // 调色板内点击确定/叉叉：关闭弹窗 + 销毁通信
                 setIsOpen(false);
                 paletteHelper.current.destroy();
-            }
-        );
+            },
+        });
+
+        // 发送默认颜色到调色板（每次打开都触发）
+        paletteHelper.current.sendDefaultTheme(['beijing', 'bj10', '#00a6c4', 'white']);
     };
 
-    // 关闭弹窗（叉叉/遮罩层）：仅关闭，不确认选择
-    const handleClose = () => {
-        setIsOpen(false);
-        paletteHelper.current.destroy(); // 销毁通信通道
-    };
-
-    // 确认选择：获取颜色并关闭弹窗
-    const handleConfirm = () => {
-        const selectedColor = paletteHelper.current.confirmSelection();
-        if (selectedColor) {
-            setFinalColor(selectedColor); // 保存最终选中的颜色
-            alert(`已确认选择颜色：${selectedColor[2]}`);
-        } else {
-            alert('请先选择一个颜色！');
-            return; // 未选色时不关闭弹窗
-        }
-        setIsOpen(false);
-        paletteHelper.current.destroy(); // 销毁通信通道
-    };
     const { t } = useTranslation();
     // 国际化翻译钩子，t函数用于获取对应语言的文本
     // ===== 核心状态管理 =====
@@ -272,9 +264,16 @@ const MetroSignGenerator: React.FC = () => {
                 // 生成 iframe URL
                 const frameUrl = paletteHelper.current.getIframeUrl(rmgRuntime.getAppName());
                 return (
-                    <Button onClick={handleOpen} key={key}>
-                        ●
-                    </Button>
+                    <>
+                        <Button
+                            onClick={handleOpen}
+                            key={key}
+                            style={{ backgroundColor: confirmedColor ? confirmedColor[2] : undefined }}
+                        >
+                            ●
+                        </Button>
+                        <PaletteIframe url={frameUrl} display={isOpen} />
+                    </>
                 );
             }
 
