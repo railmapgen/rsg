@@ -1,7 +1,7 @@
 import React from 'react';
 //import { useTranslation } from 'react-i18next';
 import MetroSignGenerator from './MSG/MetroSignGenerator';
-import { Button, useProps } from '@mantine/core';
+import { Button } from '@mantine/core';
 
 let using_app: string = 'MSG';
 const APP: React.FC = () => {
