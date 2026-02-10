@@ -1,7 +1,7 @@
 // SvgPreview.tsx
 import React from 'react';
 import { BlockData } from './types';
-import { getBlockWidth } from './utils';
+import { getBlockWidth } from './utils/utils';
 import { arrowMap } from './configs';
 
 interface SvgPreviewProps {
