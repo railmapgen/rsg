@@ -1,4 +1,5 @@
 import React from 'react';
+import themeGlobal from '../RailSignGenerator';
 interface BlockData {
     id: number;
     style: string;
@@ -203,9 +204,8 @@ export function registerDefaultBlockTypes() {
     registerBlock('Line', 256, specialStyleConfigs.Line, (block, xPos) => {
         const elems: React.ReactNode[] = [];
         const lineNum = block.specialStyles[`${block.id}-0`] || '10';
-        const lineColor = block.specialStyles[`${block.id}-1`] || '#00a3c2';
         elems.push(
-            <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={lineColor} />,
+            <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={String(themeGlobal)} />,
             <text
                 key={`${block.id}-text1`}
                 x={xPos}
@@ -248,9 +248,8 @@ export function registerDefaultBlockTypes() {
     registerBlock('Line-space', 256, specialStyleConfigs['Line-space'], (block, xPos) => {
         const elems: React.ReactNode[] = [];
         const lineNum2 = block.specialStyles[`${block.id}-0`] || '10';
-        const lineColor2 = block.specialStyles[`${block.id}-1`] || '#00a3c2';
         elems.push(
-            <rect key={`${block.id}-rect`} x={xPos + 20} y={90} width={216} height={38} fill={lineColor2} />,
+            <rect key={`${block.id}-rect`} x={xPos + 20} y={90} width={216} height={38} fill={String(themeGlobal)} />,
             <text
                 key={`${block.id}-text1`}
                 x={xPos + 20}
@@ -704,9 +703,8 @@ export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: numbe
 
         case 'Line': {
             const lineNum = block.specialStyles[`${block.id}-0`] || '10';
-            const lineColor = block.specialStyles[`${block.id}-1`] || '#00a3c2';
             elems.push(
-                <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={lineColor} />,
+                <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={String(themeGlobal)} />,
                 <text
                     key={`${block.id}-text1`}
                     x={xPos}
@@ -748,9 +746,15 @@ export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: numbe
 
         case 'Line-space': {
             const lineNum2 = block.specialStyles[`${block.id}-0`] || '10';
-            const lineColor2 = block.specialStyles[`${block.id}-1`] || '#00a3c2';
             elems.push(
-                <rect key={`${block.id}-rect`} x={xPos + 20} y={90} width={216} height={38} fill={lineColor2} />,
+                <rect
+                    key={`${block.id}-rect`}
+                    x={xPos + 20}
+                    y={90}
+                    width={216}
+                    height={38}
+                    fill={String(themeGlobal)}
+                />,
                 <text
                     key={`${block.id}-text1`}
                     x={xPos + 20}

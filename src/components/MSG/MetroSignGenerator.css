@@ -346,3 +346,48 @@ body {
 .card.dragging {
     transition: none !important;
 }
+
+/* 遮罩层：全屏覆盖 + 黑色半透明 + 置顶 + 阻止底层交互 */
+.colorPicker-mask {
+  /* 1. 全屏固定定位（置顶，不随滚动动） */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* 2. 黑色半透明背景（透明度可调整，0.7 是常用值） */
+  background-color: rgba(0, 0, 0, 0.7);
+  /* 3. 置顶（z-index 要足够高，避免被其他元素覆盖） */
+  z-index: 999999;
+  /* 4. Flex 布局实现子元素居中（最简单的居中方式） */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 5. 阻止底层内容被选中/拖拽（增强体验） */
+  user-select: none;
+  /* 6. 确保遮罩层可交互（阻止点击穿透到底层） */
+  pointer-events: auto;
+}
+
+/* 调色板容器：居中 + 固定尺寸 + 置顶 */
+.colorPicker {
+  /* 1. 固定尺寸（可根据需求调整） */
+  width: 80%;
+  max-width: 800px;
+  height: 500px;
+  /* 2. 白色背景（区分遮罩层） */
+  background-color: #fff;
+  /* 3. 圆角（可选，优化视觉） */
+  border-radius: 8px;
+  /* 4. 阴影（可选，增强层次感） */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* 5. 相对定位（如需内部元素绝对定位时用） */
+  position: relative;
+  /* 6. 确保容器在遮罩层上方（z-index 比遮罩层高一点） */
+  z-index: 1000000;
+}
+
+/* 可选：隐藏/显示控制（配合 JS 切换） */
+.colorPicker-mask.hidden {
+  display: none;
+}

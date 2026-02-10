@@ -40,6 +40,7 @@ import rmgRuntime from '@railmapgen/rmg-runtime';
  * 4. 导出预览结果为PNG图片
  * 5. 支持多语言切换（基于react-i18n）
  */
+export let themeGlobal = '#00a6c4';
 const MetroSignGenerator: React.FC = () => {
     // 1. 控制弹窗显示/隐藏
     const [isOpen, setIsOpen] = useState(false);
@@ -51,17 +52,20 @@ const MetroSignGenerator: React.FC = () => {
     // 打开弹窗：初始化通信 + 发送默认颜色
     const handleOpen = () => {
         setIsOpen(true);
+        themeGlobal = '#00a6c4'; // 每次打开重置全局颜色变量
 
         // 初始化通信，监听调色板内部事件
         paletteHelper.current.init({
             onSelect: theme => {
                 // 调色板内临时选色（仅日志，不保存）
                 console.log('临时选中颜色：', theme);
+                themeGlobal = theme[2];
             },
             onConfirm: theme => {
                 // 调色板内点击确定：保存最终颜色
                 setConfirmedColor(theme);
                 alert(`已确认选择颜色：${theme[2]}`);
+                themeGlobal = theme[2];
             },
             onClose: () => {
                 // 调色板内点击确定/叉叉：关闭弹窗 + 销毁通信
