@@ -45,7 +45,7 @@ export let lineGlobal: string = 'bj10';
 export let themeGlobal: string = '#009bc0';
 export let colorGlobal: string = '#fff';
 const MetroSignGenerator: React.FC = () => {
-    // 1. 控制弹窗显示/隐藏
+    // 1. 控制弹窗显示/隐藏x
     const [isOpen, setIsOpen] = useState(false);
     // 2. 存储最终确认的颜色（内部确定按钮触发）
     const [confirmedColor, setConfirmedColor] = useState<Theme | null>(['beijing', 'bj10', '#009bc0', 'white']);
