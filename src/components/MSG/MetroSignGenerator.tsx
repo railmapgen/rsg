@@ -43,12 +43,12 @@ import rmgRuntime from '@railmapgen/rmg-runtime';
 export let cityGlobal: string = 'beijing';
 export let lineGlobal: string = 'bj10';
 export let themeGlobal: string = '#009bc0';
-export let colorGlobal: string = 'white';
+export let colorGlobal: string = '#fff';
 const MetroSignGenerator: React.FC = () => {
     // 1. 控制弹窗显示/隐藏
     const [isOpen, setIsOpen] = useState(false);
     // 2. 存储最终确认的颜色（内部确定按钮触发）
-    const [confirmedColor, setConfirmedColor] = useState<Theme | null>(['beijing', 'bj10', '#009bc0', '#fff']);
+    const [confirmedColor, setConfirmedColor] = useState<Theme | null>(['beijing', 'bj10', '#009bc0', 'white']);
     // 3. 通信助手实例（useRef 保证唯一，支持多次复用）
     const paletteHelper = useRef(new PaletteModalHelper());
 
@@ -73,10 +73,10 @@ const MetroSignGenerator: React.FC = () => {
                 paletteHelper.current.destroy();
             },
         });
-        if (colorGlobal == 'white') {
-            paletteHelper.current.sendDefaultTheme([cityGlobal, lineGlobal, themeGlobal, '#fff']);
+        if (colorGlobal == '#fff') {
+            paletteHelper.current.sendDefaultTheme([cityGlobal, lineGlobal, themeGlobal, 'white']);
         } else {
-            paletteHelper.current.sendDefaultTheme([cityGlobal, lineGlobal, themeGlobal, '#000']);
+            paletteHelper.current.sendDefaultTheme([cityGlobal, lineGlobal, themeGlobal, 'black']);
         }
         // 发送默认颜色到调色板（每次打开都触发）
     };
