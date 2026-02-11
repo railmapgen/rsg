@@ -781,14 +781,7 @@ export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: numbe
             const lineNum2 = block.specialStyles[`${block.id}-0`] || '10';
             const lineColor = getBlockThemeColor(block);
             elems.push(
-                <rect
-                    key={`${block.id}-rect`}
-                    x={xPos + 20}
-                    y={90}
-                    width={216}
-                    height={38}
-                    fill={lineColor}
-                />,
+                <rect key={`${block.id}-rect`} x={xPos + 20} y={90} width={216} height={38} fill={lineColor} />,
                 <text
                     key={`${block.id}-text1`}
                     x={xPos + 20}
