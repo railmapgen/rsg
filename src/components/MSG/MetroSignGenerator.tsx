@@ -782,8 +782,6 @@ const MetroSignGenerator: React.FC = () => {
                     firstThemeBlock.color,
                     firstThemeBlock.textColor,
                 ]);
-
-                alert('JSON导入成功！');
             } catch (error) {
                 console.error('Failed to import JSON：', error);
                 alert(`Failed to import JSON：${(error as Error).message}`);
