@@ -1,20 +1,38 @@
 import React from 'react';
-import { themeGlobal } from './MetroSignGenerator';
+interface BlockTheme {
+    city: string;
+    line: string;
+    color: string;
+    textColor: 'black' | 'white';
+}
 interface BlockData {
     id: number;
     style: string;
     cutLine: boolean;
     specialStyles: Record<string, string>;
+    theme?: BlockTheme;
     collapsed: boolean;
     dragId: number;
 }
 /**
  * 注册导视块类型及其配置
  */
+/**
+注册一个有theme支持的导视块类型示例：
+registerBlock('MyThemeBlock', 256, [
+  { type: 'text', label: '...', defaultValue: '...' },
+  { type: 'color', label: '...', defaultValue: '#009bc0' },
+], (block, xPos) => {
+  const color = block.theme?.color ?? '#009bc0';
+  return [<rect key={`${block.id}-rect`} x={xPos} y={0} width={256} height={128} fill={color} />];
+});
+
+ */
 type BlockTypeConfig = {
     style: string;
     width: number;
     config: SpecialStyleConfig[];
+    supportsTheme: boolean;
     render: (block: BlockData, xPos: number, blockWidth: number) => React.ReactNode[];
     // 可扩展：渲染方法、SVG生成、默认参数等
 };
@@ -32,7 +50,8 @@ function registerBlock(
     config: SpecialStyleConfig[],
     render: (block: BlockData, xPos: number, blockWidth: number) => React.ReactNode[]
 ) {
-    blockTypeRegistry[style] = { style, width, config, render };
+    const supportsTheme = config.some(item => item.type === 'color');
+    blockTypeRegistry[style] = { style, width, config, supportsTheme, render };
     specialStyleConfigs[style] = config;
 }
 
@@ -204,8 +223,9 @@ export function registerDefaultBlockTypes() {
     registerBlock('Line', 256, specialStyleConfigs.Line, (block, xPos) => {
         const elems: React.ReactNode[] = [];
         const lineNum = block.specialStyles[`${block.id}-0`] || '10';
+        const lineColor = getBlockThemeColor(block);
         elems.push(
-            <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={themeGlobal} />,
+            <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={lineColor} />,
             <text
                 key={`${block.id}-text1`}
                 x={xPos}
@@ -248,8 +268,9 @@ export function registerDefaultBlockTypes() {
     registerBlock('Line-space', 256, specialStyleConfigs['Line-space'], (block, xPos) => {
         const elems: React.ReactNode[] = [];
         const lineNum2 = block.specialStyles[`${block.id}-0`] || '10';
+        const lineColor = getBlockThemeColor(block);
         elems.push(
-            <rect key={`${block.id}-rect`} x={xPos + 20} y={90} width={216} height={38} fill={String(themeGlobal)} />,
+            <rect key={`${block.id}-rect`} x={xPos + 20} y={90} width={216} height={38} fill={lineColor} />,
             <text
                 key={`${block.id}-text1`}
                 x={xPos + 20}
@@ -449,6 +470,13 @@ interface SpecialStyleConfig {
 }
 
 const DEFAULT_BLOCK_STYLE = 'Exit';
+const DEFAULT_THEME_COLOR = '#009bc0';
+
+function getBlockThemeColor(block: BlockData): string {
+    const themeColor = block.theme?.color;
+    if (themeColor) return themeColor;
+    return block.specialStyles[`${block.id}-1`] || DEFAULT_THEME_COLOR;
+}
 
 function createBlock(id: number, style: string = DEFAULT_BLOCK_STYLE): BlockData {
     return {
@@ -463,6 +491,10 @@ function createBlock(id: number, style: string = DEFAULT_BLOCK_STYLE): BlockData
 
 function hasSpecialStyleConfig(style: string): boolean {
     return Boolean(specialStyleConfigs[style]);
+}
+
+function isThemeStyle(style: string): boolean {
+    return Boolean(blockTypeRegistry[style]?.supportsTheme);
 }
 
 function getBlockWidth(style: string): number {
@@ -703,8 +735,9 @@ export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: numbe
 
         case 'Line': {
             const lineNum = block.specialStyles[`${block.id}-0`] || '10';
+            const lineColor = getBlockThemeColor(block);
             elems.push(
-                <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={String(themeGlobal)} />,
+                <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={lineColor} />,
                 <text
                     key={`${block.id}-text1`}
                     x={xPos}
@@ -746,6 +779,7 @@ export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: numbe
 
         case 'Line-space': {
             const lineNum2 = block.specialStyles[`${block.id}-0`] || '10';
+            const lineColor = getBlockThemeColor(block);
             elems.push(
                 <rect
                     key={`${block.id}-rect`}
@@ -753,7 +787,7 @@ export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: numbe
                     y={90}
                     width={216}
                     height={38}
-                    fill={String(themeGlobal)}
+                    fill={lineColor}
                 />,
                 <text
                     key={`${block.id}-text1`}
@@ -941,7 +975,7 @@ export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: numbe
     return elems;
 }
 
-export type { BlockData, SpecialStyleConfig };
+export type { BlockData, SpecialStyleConfig, BlockTheme };
 export {
     specialStyleConfigs,
     arrowMap,
@@ -950,5 +984,6 @@ export {
     DEFAULT_BLOCK_STYLE,
     createBlock,
     hasSpecialStyleConfig,
+    isThemeStyle,
     getBlockWidth,
 };

@@ -6,6 +6,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import './MetroSignGenerator.css';
 import {
     BlockData,
+    BlockTheme,
     specialStyleConfigs,
     renderBlockSVG,
     registerDefaultBlockTypes,
@@ -13,6 +14,7 @@ import {
     getStyleLabel,
     createBlock,
     hasSpecialStyleConfig,
+    isThemeStyle,
 } from './configs';
 import { useTranslation } from 'react-i18next';
 import Card, { DeleteZone } from './drag';
@@ -31,6 +33,13 @@ import { TouchBackend } from 'react-dnd-touch-backend';
 import { PaletteIframe, PaletteModalHelper, Theme } from '../utils/PaletteModalHelper';
 import rmgRuntime from '@railmapgen/rmg-runtime';
 
+type MetroSignExportData = {
+    version: 1;
+    exportedAt: string;
+    backgroundColor: string;
+    blocks: BlockData[];
+};
+
 /**
  * 核心组件：地铁导视牌生成器
  * 功能说明：
@@ -44,40 +53,86 @@ export let cityGlobal: string = 'beijing';
 export let lineGlobal: string = 'bj10';
 export let themeGlobal: string = '#009bc0';
 export let colorGlobal: string = '#fff';
+
+const DEFAULT_THEME: BlockTheme = {
+    city: 'beijing',
+    line: 'bj10',
+    color: '#009bc0',
+    textColor: 'white',
+};
 const MetroSignGenerator: React.FC = () => {
     // 1. 控制弹窗显示/隐藏x
     const [isOpen, setIsOpen] = useState(false);
+    const [activeThemeBlockId, setActiveThemeBlockId] = useState<number | null>(null);
     // 2. 存储最终确认的颜色（内部确定按钮触发）
-    const [confirmedColor, setConfirmedColor] = useState<Theme | null>(['beijing', 'bj10', '#009bc0', 'white']);
+    const [, setConfirmedColor] = useState<Theme | null>([
+        DEFAULT_THEME.city,
+        DEFAULT_THEME.line,
+        DEFAULT_THEME.color,
+        DEFAULT_THEME.textColor,
+    ]);
     // 3. 通信助手实例（useRef 保证唯一，支持多次复用）
     const paletteHelper = useRef(new PaletteModalHelper());
 
+    const getThemeFromGlobals = (): BlockTheme => ({
+        city: cityGlobal || DEFAULT_THEME.city,
+        line: lineGlobal || DEFAULT_THEME.line,
+        color: themeGlobal || DEFAULT_THEME.color,
+        textColor: colorGlobal === '#000' ? 'black' : 'white',
+    });
+
+    const toThemeTuple = (theme: BlockTheme): Theme => [theme.city, theme.line, theme.color, theme.textColor];
+    const normalizeTextColor = (value: unknown): 'black' | 'white' => (value === 'black' ? 'black' : 'white');
+
+    const updateBlockTheme = (id: number, theme: BlockTheme) => {
+        setBlocks(prevBlocks =>
+            prevBlocks.map(block => {
+                if (block.id !== id) return block;
+                return {
+                    ...block,
+                    theme,
+                    specialStyles: {
+                        ...block.specialStyles,
+                        [`${id}-1`]: theme.color,
+                    },
+                };
+            })
+        );
+    };
+
     // 打开弹窗：初始化通信 + 发送默认颜色
-    const handleOpen = () => {
+    const handleOpen = (blockId: number, initialTheme: BlockTheme) => {
+        setActiveThemeBlockId(blockId);
+        setConfirmedColor(toThemeTuple(initialTheme));
         setIsOpen(true);
 
         // 初始化通信，监听调色板内部事件
         paletteHelper.current.init({
-            onSelect: theme => {
-                setConfirmedColor(theme);
-                cityGlobal = theme[0].toString();
-                lineGlobal = theme[1].toString();
-                themeGlobal = theme[2].toString();
-                colorGlobal = theme[3].toString();
+            onSelect: paletteTheme => {
+                const nextTheme: BlockTheme = {
+                    city: String(paletteTheme[0]),
+                    line: String(paletteTheme[1]),
+                    color: String(paletteTheme[2]),
+                    textColor: paletteTheme[3] === 'black' ? 'black' : 'white',
+                };
+                setConfirmedColor(toThemeTuple(nextTheme));
+                updateBlockTheme(blockId, nextTheme);
+                cityGlobal = nextTheme.city;
+                lineGlobal = nextTheme.line;
+                themeGlobal = nextTheme.color;
+                colorGlobal = nextTheme.textColor === 'white' ? '#fff' : '#000';
                 setIsOpen(false);
+                setActiveThemeBlockId(null);
                 paletteHelper.current.destroy();
             },
             onClose: () => {
                 // 调色板内点击确定/叉叉：关闭弹窗 + 销毁通信
                 setIsOpen(false);
+                setActiveThemeBlockId(null);
                 paletteHelper.current.destroy();
             },
         });
-        if (colorGlobal == '#fff') {
-            paletteHelper.current.sendDefaultTheme([cityGlobal, lineGlobal, themeGlobal, 'white']);
-        } else {
-            paletteHelper.current.sendDefaultTheme([cityGlobal, lineGlobal, themeGlobal, 'black']);
-        }
+        paletteHelper.current.sendDefaultTheme(toThemeTuple(initialTheme));
         // 发送默认颜色到调色板（每次打开都触发）
     };
 
@@ -90,6 +145,7 @@ const MetroSignGenerator: React.FC = () => {
     const [nextId, setNextId] = useState(2);
     // SVG预览区域的DOM引用（用于导出PNG时获取SVG内容）
     const svgRef = useRef<SVGSVGElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     // 导视牌背景色（默认深蓝色：#041c31，地铁导视常用配色）
     const [backgroundColor, setBackgroundColor] = useState('#041c31');
 
@@ -168,6 +224,7 @@ const MetroSignGenerator: React.FC = () => {
                           style,
                           // 若新样式有特殊配置则清空原有配置，否则保留
                           specialStyles: hasSpecialStyleConfig(style) ? {} : block.specialStyles,
+                          theme: isThemeStyle(style) ? block.theme || getThemeFromGlobals() : undefined,
                       }
                     : block
             )
@@ -209,9 +266,10 @@ const MetroSignGenerator: React.FC = () => {
 
         return configs.map((config, index) => {
             // 生成参数唯一key（避免React列表渲染警告）
-            const key = `${block.dragId}-${index}`;
+            const key = `${block.id}-${index}`;
+            const legacyKey = `${block.dragId}-${index}`;
             // 获取当前参数值，无则为空
-            const value = block.specialStyles[key] || '';
+            const value = block.specialStyles[key] || block.specialStyles[legacyKey] || '';
 
             // 文本输入框
             if (config.type === 'text') {
@@ -268,23 +326,20 @@ const MetroSignGenerator: React.FC = () => {
             }
 
             if (config.type === 'color') {
-                // 生成 iframe URL
-                const frameUrl = paletteHelper.current.getIframeUrl(rmgRuntime.getAppName());
+                const blockTheme = block.theme || getThemeFromGlobals();
                 return (
-                    <>
+                    <React.Fragment key={key}>
                         <Button
-                            onClick={handleOpen}
-                            key={key}
+                            onClick={() => handleOpen(block.id, blockTheme)}
                             style={{
-                                backgroundColor: confirmedColor ? confirmedColor[2] : undefined,
-                                color: confirmedColor ? confirmedColor[3] : undefined,
+                                backgroundColor: blockTheme.color,
+                                color: blockTheme.textColor,
                                 border: 'none',
                             }}
                         >
                             ●
                         </Button>
-                        <PaletteIframe url={frameUrl} visible={isOpen} />
-                    </>
+                    </React.Fragment>
                 );
             }
 
@@ -573,6 +628,175 @@ const MetroSignGenerator: React.FC = () => {
         }
     };
 
+    const downloadJSON = () => {
+        try {
+            const fallbackTheme = getThemeFromGlobals();
+            // 导出时统一特殊属性键为 `${id}-${index}`，避免导入后因id变化导致丢失
+            const normalizedBlocks = blocks.map(block => {
+                const normalizedSpecialStyles: Record<string, string> = {};
+                Object.entries(block.specialStyles || {}).forEach(([rawKey, rawValue]) => {
+                    const match = rawKey.match(/-(\d+)$/);
+                    if (!match) return;
+                    const index = match[1];
+                    normalizedSpecialStyles[`${block.id}-${index}`] = String(rawValue ?? '');
+                });
+
+                const normalizedTheme = isThemeStyle(block.style)
+                    ? {
+                          city: block.theme?.city || fallbackTheme.city,
+                          line: block.theme?.line || fallbackTheme.line,
+                          color: block.theme?.color || normalizedSpecialStyles[`${block.id}-1`] || fallbackTheme.color,
+                          textColor: block.theme?.textColor || fallbackTheme.textColor,
+                      }
+                    : undefined;
+
+                if (normalizedTheme) {
+                    normalizedSpecialStyles[`${block.id}-1`] = normalizedTheme.color;
+                }
+
+                return {
+                    ...block,
+                    dragId: block.id,
+                    specialStyles: normalizedSpecialStyles,
+                    theme: normalizedTheme,
+                };
+            });
+
+            const payload: MetroSignExportData = {
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                backgroundColor,
+                blocks: normalizedBlocks,
+            };
+            const jsonString = JSON.stringify(payload, null, 4);
+
+            // 2. 创建Blob对象（二进制大对象），指定JSON MIME类型
+            const blob = new Blob([jsonString], { type: 'application/json' });
+
+            // 3. 创建临时下载链接
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+
+            // 4. 设置下载属性：文件名自定义（比如blocks-data.json）
+            a.href = url;
+            a.download = 'blocks-data.json'; // 下载后的文件名
+
+            // 5. 模拟点击下载，然后清理临时资源
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); // 释放URL对象，避免内存泄漏
+
+            alert('JSON文件下载成功！');
+        } catch (error) {
+            // 异常处理：序列化失败/下载失败时提示
+            console.error('下载JSON失败：', error);
+            alert(`下载失败：${(error as Error).message}`);
+        }
+    };
+
+    const importJSON = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleImportJSON = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                const content = String(reader.result || '');
+                const raw: MetroSignExportData = JSON.parse(content);
+                if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+                    throw new Error('JSON格式不正确，必须是对象格式。');
+                }
+                if (!Array.isArray(raw.blocks) || raw.blocks.length === 0) {
+                    throw new Error('JSON格式不正确，缺少有效的 blocks 数组。');
+                }
+
+                const usedIds = new Set<number>();
+                let fallbackId = 1;
+                const normalizedBlocks: BlockData[] = raw.blocks.map((item: Partial<BlockData>) => {
+                    const parsedId = Number(item?.id);
+                    let id = Number.isInteger(parsedId) && parsedId > 0 ? parsedId : fallbackId;
+                    while (usedIds.has(id)) id += 1;
+                    usedIds.add(id);
+                    fallbackId = Math.max(fallbackId, id + 1);
+
+                    const style = typeof item?.style === 'string' && item.style ? item.style : 'Exit';
+                    const cutLine = Boolean(item?.cutLine);
+                    const themeFromItem = (item as { theme?: BlockTheme }).theme;
+
+                    const normalizedSpecialStyles: Record<string, string> = {};
+                    const rawSpecialStyles = item?.specialStyles;
+                    if (rawSpecialStyles && typeof rawSpecialStyles === 'object') {
+                        Object.entries(rawSpecialStyles).forEach(([rawKey, rawValue]) => {
+                            const match = rawKey.match(/-(\d+)$/);
+                            if (!match) return;
+                            const index = match[1];
+                            normalizedSpecialStyles[`${id}-${index}`] = String(rawValue ?? '');
+                        });
+                    }
+
+                    const normalizedTheme = isThemeStyle(style)
+                        ? ({
+                              city: typeof themeFromItem?.city === 'string' ? themeFromItem.city : DEFAULT_THEME.city,
+                              line: typeof themeFromItem?.line === 'string' ? themeFromItem.line : DEFAULT_THEME.line,
+                              color:
+                                  typeof themeFromItem?.color === 'string' ? themeFromItem.color : DEFAULT_THEME.color,
+                              textColor: normalizeTextColor(themeFromItem?.textColor),
+                          } as BlockTheme)
+                        : undefined;
+
+                    if (normalizedTheme) {
+                        normalizedSpecialStyles[`${id}-1`] = normalizedTheme.color;
+                    }
+
+                    return {
+                        id,
+                        style,
+                        cutLine,
+                        specialStyles: normalizedSpecialStyles,
+                        theme: normalizedTheme,
+                        collapsed: false,
+                        dragId: id,
+                    };
+                });
+
+                setBlocks(normalizedBlocks);
+                setNextId(Math.max(...normalizedBlocks.map(block => block.id), 0) + 1);
+
+                if (typeof raw.backgroundColor === 'string') {
+                    setBackgroundColor(raw.backgroundColor);
+                }
+
+                const firstThemeBlock = normalizedBlocks.find(block => block.theme)?.theme || DEFAULT_THEME;
+                cityGlobal = firstThemeBlock.city;
+                lineGlobal = firstThemeBlock.line;
+                themeGlobal = firstThemeBlock.color;
+                colorGlobal = firstThemeBlock.textColor === 'white' ? '#fff' : '#000';
+                setConfirmedColor([
+                    firstThemeBlock.city,
+                    firstThemeBlock.line,
+                    firstThemeBlock.color,
+                    firstThemeBlock.textColor,
+                ]);
+
+                alert('JSON导入成功！');
+            } catch (error) {
+                console.error('Failed to import JSON：', error);
+                alert(`Failed to import JSON：${(error as Error).message}`);
+            } finally {
+                // 允许重复导入同一文件
+                event.target.value = '';
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    const paletteFrameUrl = paletteHelper.current.getIframeUrl(rmgRuntime.getAppName());
+
     // ===== 组件主布局 =====
     return (
         <div className="metro-sign-generator">
@@ -596,6 +820,19 @@ const MetroSignGenerator: React.FC = () => {
                             <Button onClick={downloadPNG} className="download-btn">
                                 {t('main_area.export_as_png')}
                             </Button>
+                            <Button onClick={downloadJSON} className="download-btn">
+                                {t('main_area.export_as_json')}
+                            </Button>
+                            <Button onClick={importJSON} className="download-btn">
+                                {t('main_area.import_json')}
+                            </Button>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="application/json,.json"
+                                style={{ display: 'none' }}
+                                onChange={handleImportJSON}
+                            />
                             <DeleteZone onDrop={id => removeBlock(id)} />
                             <div className="bg-color">
                                 <label>{t('main_area.background_color')}：</label>
@@ -619,6 +856,7 @@ const MetroSignGenerator: React.FC = () => {
                     </DndProvider>
                 </div>
             </div>
+            <PaletteIframe url={paletteFrameUrl} visible={isOpen && activeThemeBlockId !== null} />
 
             {/* 页脚：版权信息 */}
             <footer>

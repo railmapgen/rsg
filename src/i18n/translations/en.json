@@ -6,6 +6,8 @@
         "preview": "Sign Preview",
         "new_block": "Add New Block",
         "export_as_png": "Download as PNG",
+        "export_as_json": "Download as JSON",
+        "import_json": "Import JSON",
         "background_color": "Background Color"
     },
     "blocks": {

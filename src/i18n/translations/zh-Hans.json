@@ -1,70 +1,72 @@
-{
-    "head_bar": {
-        "project_name": "地铁导视生成器"
-    },
-    "main_area": {
-        "preview": "标志预览",
-        "new_block": "添加新块",
-        "export_as_png": "下载png",
-        "background_color": "背景颜色"
-    },
-    "blocks": {
-        "block": "块",
-        "cutline": "分割线(右)",
-        "styles":{
-            "style": "样式",
-            "single_block": "单格",
-            "two_block": "两格",
-            "three_blocks": "三格",
-            "exit_logo": "出口图标",
-            "toilet": "洗手间",
-            "blank": "空",
-            "line": "线路",
-            "line_space": "线路+空格",
-            "terminal_text": "终点文字",
-            "exit_text": "出口文字",
-            "special": "独特属性",
-            "specials": {
-                "line_number": "线路编号",
-                "line_color": "线路颜色",
-                "terminal_zh": "终点站中文",
-                "terminal_en": "终点站英文",
-                "text_align": "对齐方式",
-                "align_right": "靠右对齐",
-                "align_center": "居中对齐",
-                "align_left": "靠左对齐",
-                "exit_letter": "出口编号",
-                "exit_lower": "出口下角标",
-                "exit_zh": "出口中文",
-                "exit_en": "出口英文",
-                "line_type": "线路类型",
-                "normal_line":"普通线",
-                "loop_line": "环线",
-                "terminal_station": "终点站"
-            }
-        }
-    },
-    "useful": {
-        "yes": "是",
-        "no": "否"
-    },
-    "styleToText":{
-        "Exit": "出口",
-        "toilet": "洗手间",
-        "blank1": "空",
-        "Line": "线路",
-        "Line-space": "线路+空格",
-        "ExitText": "出口文字",
-        "To": "开往",
-        "blank2": "空",
-        "↗": "↗",
-        "↘": "↘",
-        "↑": "↑",
-        "↓": "↓",
-        "←": "←",
-        "→": "→",
-        "↙": "↙",
-        "↖": "↖"
-    },
-    "copy": "部分素材来自https://centralgo.site/vitool/，如有侵权请联系删除"
+﻿{
+    "head_bar":  {
+                     "project_name":  "地铁导视生成器"
+                 },
+    "main_area":  {
+                      "preview":  "标志预览",
+                      "new_block":  "添加新块",
+                      "export_as_png":  "下载png",
+                      "background_color":  "背景颜色",
+                      "export_as_json":  "导出 JSON",
+                      "import_json":  "导入 JSON"
+                  },
+    "blocks":  {
+                   "block":  "块",
+                   "cutline":  "分割线(右)",
+                   "styles":  {
+                                  "style":  "样式",
+                                  "single_block":  "单格",
+                                  "two_block":  "两格",
+                                  "three_blocks":  "三格",
+                                  "exit_logo":  "出口图标",
+                                  "toilet":  "洗手间",
+                                  "blank":  "空",
+                                  "line":  "线路",
+                                  "line_space":  "线路+空格",
+                                  "terminal_text":  "终点文字",
+                                  "exit_text":  "出口文字",
+                                  "special":  "独特属性",
+                                  "specials":  {
+                                                   "line_number":  "线路编号",
+                                                   "line_color":  "线路颜色",
+                                                   "terminal_zh":  "终点站中文",
+                                                   "terminal_en":  "终点站英文",
+                                                   "text_align":  "对齐方式",
+                                                   "align_right":  "靠右对齐",
+                                                   "align_center":  "居中对齐",
+                                                   "align_left":  "靠左对齐",
+                                                   "exit_letter":  "出口编号",
+                                                   "exit_lower":  "出口下角标",
+                                                   "exit_zh":  "出口中文",
+                                                   "exit_en":  "出口英文",
+                                                   "line_type":  "线路类型",
+                                                   "normal_line":  "普通线",
+                                                   "loop_line":  "环线",
+                                                   "terminal_station":  "终点站"
+                                               }
+                              }
+               },
+    "useful":  {
+                   "yes":  "是",
+                   "no":  "否"
+               },
+    "styleToText":  {
+                        "Exit":  "出口",
+                        "toilet":  "洗手间",
+                        "blank1":  "空",
+                        "Line":  "线路",
+                        "Line-space":  "线路+空格",
+                        "ExitText":  "出口文字",
+                        "To":  "开往",
+                        "blank2":  "空",
+                        "↗":  "↗",
+                        "↘":  "↘",
+                        "↑":  "↑",
+                        "↓":  "↓",
+                        "←":  "←",
+                        "→":  "→",
+                        "↙":  "↙",
+                        "↖":  "↖"
+                    },
+    "copy":  "部分素材来自https://centralgo.site/vitool/，如有侵权请联系删除"
 }
