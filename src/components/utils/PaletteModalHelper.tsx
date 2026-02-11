@@ -126,7 +126,7 @@ export const PaletteIframe: React.FC<{ url: string; visible?: boolean }> = ({ ur
         <div className={`colorPicker-mask ${visible ? '' : 'hidden'}`}>
             <iframe
                 src={url}
-                style={{ width: '100%', height: '100%', border: 'none' }} // 移除 display 控制
+                style={{ border: 'none' }} // 移除 display 控制
                 loading="eager"
                 title="调色板"
                 className="colorPicker"

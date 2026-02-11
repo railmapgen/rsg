@@ -40,32 +40,28 @@ import rmgRuntime from '@railmapgen/rmg-runtime';
  * 4. 导出预览结果为PNG图片
  * 5. 支持多语言切换（基于react-i18n）
  */
-export let themeGlobal = '#00a6c4';
+export let themeGlobal = '#009bc0';
 const MetroSignGenerator: React.FC = () => {
     // 1. 控制弹窗显示/隐藏
     const [isOpen, setIsOpen] = useState(false);
     // 2. 存储最终确认的颜色（内部确定按钮触发）
-    const [confirmedColor, setConfirmedColor] = useState<Theme | null>(null);
+    const [confirmedColor, setConfirmedColor] = useState<Theme | null>(['beijing', 'bj10', '#009bc0', 'white']);
     // 3. 通信助手实例（useRef 保证唯一，支持多次复用）
     const paletteHelper = useRef(new PaletteModalHelper());
 
     // 打开弹窗：初始化通信 + 发送默认颜色
     const handleOpen = () => {
         setIsOpen(true);
-        themeGlobal = '#00a6c4'; // 每次打开重置全局颜色变量
+        themeGlobal = '#009bc0'; // 每次打开重置全局颜色变量
 
         // 初始化通信，监听调色板内部事件
         paletteHelper.current.init({
             onSelect: theme => {
-                // 调色板内临时选色（仅日志，不保存）
-                console.log('临时选中颜色：', theme);
-                themeGlobal = theme[2];
-            },
-            onConfirm: theme => {
-                // 调色板内点击确定：保存最终颜色
                 setConfirmedColor(theme);
                 alert(`已确认选择颜色：${theme[2]}`);
                 themeGlobal = theme[2];
+                setIsOpen(false);
+                paletteHelper.current.destroy();
             },
             onClose: () => {
                 // 调色板内点击确定/叉叉：关闭弹窗 + 销毁通信
@@ -75,7 +71,7 @@ const MetroSignGenerator: React.FC = () => {
         });
 
         // 发送默认颜色到调色板（每次打开都触发）
-        paletteHelper.current.sendDefaultTheme(['beijing', 'bj10', '#00a6c4', 'white']);
+        paletteHelper.current.sendDefaultTheme(['beijing', 'bj10', '#009bc0', 'white']);
     };
 
     const { t } = useTranslation();
@@ -361,7 +357,7 @@ const MetroSignGenerator: React.FC = () => {
 
         let divcolor = '#d3d3d3';
         if (block.collapsed) {
-            divcolor = '#00a6c4';
+            divcolor = '#009bc0';
         }
 
         // 导视块配置面板主结构

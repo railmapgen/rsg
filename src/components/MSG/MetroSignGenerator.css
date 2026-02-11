@@ -75,6 +75,7 @@ body {
   top: 20px; /* 从顶部留出空间，避免覆盖调色板 */
   z-index: 10000; /* 远低于调色板的 999999，确保不覆盖 */
   max-height: calc(100vh - 40px); /* 限制高度，避免占满屏幕 */
+  background-color: #fff  ;
 }
 
 .actions {
@@ -370,13 +371,13 @@ body {
 
 /* 调色板容器：居中 + 固定尺寸 + 置顶 */
 .colorPicker {
+  top: 50px;
   width: 80%;
-  max-width: 800px;
-  height: 500px;
+  max-width: 500px;
+  height: 50%;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  position: relative;
   z-index: 1000000;
   min-width: 300px; /* 新增：最小宽度，避免内容为空时塌陷 */
   min-height: 400px; /* 新增：最小高度 */
