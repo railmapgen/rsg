@@ -1,5 +1,5 @@
 import React from 'react';
-import themeGlobal from '../RailSignGenerator';
+import { themeGlobal } from './MetroSignGenerator';
 interface BlockData {
     id: number;
     style: string;
@@ -194,7 +194,7 @@ export function registerDefaultBlockTypes() {
                     fill="white"
                     fontWeight={500}
                 >
-                    鍑?
+                    出
                 </text>
             );
         }
@@ -205,7 +205,7 @@ export function registerDefaultBlockTypes() {
         const elems: React.ReactNode[] = [];
         const lineNum = block.specialStyles[`${block.id}-0`] || '10';
         elems.push(
-            <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={String(themeGlobal)} />,
+            <rect key={`${block.id}-rect`} x={xPos} y={90} width={256} height={38} fill={themeGlobal} />,
             <text
                 key={`${block.id}-text1`}
                 x={xPos}
