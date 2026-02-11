@@ -276,7 +276,7 @@ const MetroSignGenerator: React.FC = () => {
                         >
                             ●
                         </Button>
-                        <PaletteIframe url={frameUrl} display={isOpen} />
+                        <PaletteIframe url={frameUrl} visible={isOpen} />
                     </>
                 );
             }

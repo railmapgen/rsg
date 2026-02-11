@@ -114,15 +114,23 @@ export class PaletteModalHelper {
 
 // 极简 iframe 组件
 import React from 'react';
-export const PaletteIframe: React.FC<{ url: string; display?: boolean }> = ({ url, display = false }) => {
+export const PaletteIframe: React.FC<{ url: string; visible?: boolean }> = ({ url, visible = false }) => {
+    // 监听 iframe 加载错误，快速定位 URL/跨域问题
+    const handleIframeError = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
+        console.error('iframe 加载失败：', e);
+        console.error('当前 iframe URL：', url); // 打印 URL 验证是否有效
+    };
+
     return (
-        <div className="colorPicker-mask">
+        // 用 hidden 类控制遮罩层显隐（对应 CSS 中的 .colorPicker-mask.hidden { display: none; }）
+        <div className={`colorPicker-mask ${visible ? '' : 'hidden'}`}>
             <iframe
                 src={url}
-                style={{ width: '100%', height: '100%', border: 'none', display: display ? 'block' : 'none' }}
+                style={{ width: '100%', height: '100%', border: 'none' }} // 移除 display 控制
                 loading="eager"
                 title="调色板"
                 className="colorPicker"
+                onError={handleIframeError} // 新增错误监听
             />
         </div>
     );

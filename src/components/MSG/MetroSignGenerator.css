@@ -68,14 +68,13 @@ body {
 }
 
 .preview-container {
-  justify-content: center;
-  align-items: center;
-  height:170px;
-  background: #f0f4f8;
-  border-radius: 8px;
-  padding: 20px;
   overflow-x: auto;
-  z-index: 10000;
+  width: 100%;
+  padding: 1px;
+  position: fixed;
+  top: 20px; /* 从顶部留出空间，避免覆盖调色板 */
+  z-index: 10000; /* 远低于调色板的 999999，确保不覆盖 */
+  max-height: calc(100vh - 40px); /* 限制高度，避免占满屏幕 */
 }
 
 .actions {
@@ -371,20 +370,16 @@ body {
 
 /* 调色板容器：居中 + 固定尺寸 + 置顶 */
 .colorPicker {
-  /* 1. 固定尺寸（可根据需求调整） */
   width: 80%;
   max-width: 800px;
   height: 500px;
-  /* 2. 白色背景（区分遮罩层） */
   background-color: #fff;
-  /* 3. 圆角（可选，优化视觉） */
   border-radius: 8px;
-  /* 4. 阴影（可选，增强层次感） */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  /* 5. 相对定位（如需内部元素绝对定位时用） */
   position: relative;
-  /* 6. 确保容器在遮罩层上方（z-index 比遮罩层高一点） */
   z-index: 1000000;
+  min-width: 300px; /* 新增：最小宽度，避免内容为空时塌陷 */
+  min-height: 400px; /* 新增：最小高度 */
 }
 
 /* 可选：隐藏/显示控制（配合 JS 切换） */
