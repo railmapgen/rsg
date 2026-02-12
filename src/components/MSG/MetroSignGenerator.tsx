@@ -32,8 +32,7 @@ import { DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { PaletteIframe, PaletteModalHelper, Theme } from '../utils/PaletteModalHelper';
 import rmgRuntime from '@railmapgen/rmg-runtime';
-
-type MetroSignExportData = {
+export type MetroSignExportData = {
     version: 1;
     exportedAt: string;
     backgroundColor: string;
@@ -53,8 +52,98 @@ export let cityGlobal: string = 'beijing';
 export let lineGlobal: string = 'bj10';
 export let themeGlobal: string = '#009bc0';
 export let colorGlobal: string = '#fff';
+export const normalizeTextColor = (value: unknown): 'black' | 'white' => (value === 'black' ? 'black' : 'white');
+export let blockNum: number = 1;
+/**
+ * 从 localStorage 加载导视块数据
+ * 如果没有数据或解析失败，则返回一个默认块
+ */
+export function loadLocalStorage(): BlockData[] {
+    try {
+        const content = localStorage.getItem('metro-sign-data');
+        if (!content) {
+            // localStorage没有数据，返回默认1个出口块
+            return [createBlock(1)];
+        }
 
-const DEFAULT_THEME: BlockTheme = {
+        const raw: MetroSignExportData = JSON.parse(content);
+
+        if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+            throw new Error('JSON格式不正确，必须是对象格式。');
+        }
+        if (!Array.isArray(raw.blocks) || raw.blocks.length === 0) {
+            throw new Error('JSON格式不正确，缺少有效的 blocks 数组。');
+        }
+
+        const usedIds = new Set<number>();
+        let fallbackId = 1;
+        let dragIdCounter = 1;
+
+        const normalizedBlocks: BlockData[] = raw.blocks.map((item: Partial<BlockData>) => {
+            const parsedId = Number(item?.id);
+            let id = Number.isInteger(parsedId) && parsedId > 0 ? parsedId : fallbackId;
+            while (usedIds.has(id)) id += 1;
+            usedIds.add(id);
+            blockNum = Math.max(blockNum, id);
+            fallbackId = Math.max(fallbackId, id + 1);
+
+            const style = typeof item?.style === 'string' && item.style ? item.style : 'Exit';
+            const cutLine = Boolean(item?.cutLine);
+            const themeFromItem = (item as { theme?: BlockTheme }).theme;
+
+            // 解析特殊样式
+            const normalizedSpecialStyles: Record<string, string> = {};
+            const rawSpecialStyles = item?.specialStyles;
+            if (rawSpecialStyles && typeof rawSpecialStyles === 'object') {
+                Object.entries(rawSpecialStyles).forEach(([rawKey, rawValue]) => {
+                    const match = rawKey.match(/-(\d+)$/);
+                    if (!match) return;
+                    const index = match[1];
+                    normalizedSpecialStyles[`${id}-${index}`] = String(rawValue ?? '');
+                });
+            }
+
+            const normalizedTheme = isThemeStyle(style)
+                ? {
+                      city: typeof themeFromItem?.city === 'string' ? themeFromItem.city : DEFAULT_THEME.city,
+                      line: typeof themeFromItem?.line === 'string' ? themeFromItem.line : DEFAULT_THEME.line,
+                      color: typeof themeFromItem?.color === 'string' ? themeFromItem.color : DEFAULT_THEME.color,
+                      textColor: normalizeTextColor(themeFromItem?.textColor),
+                  }
+                : undefined;
+
+            if (normalizedTheme) {
+                normalizedSpecialStyles[`${id}-1`] = normalizedTheme.color;
+            }
+
+            return {
+                id,
+                style,
+                cutLine,
+                specialStyles: normalizedSpecialStyles,
+                theme: normalizedTheme,
+                collapsed: false,
+                dragId: dragIdCounter++,
+            };
+        });
+
+        // 更新全局主题变量
+        const firstThemeBlock = normalizedBlocks.find(block => block.theme)?.theme || DEFAULT_THEME;
+        cityGlobal = firstThemeBlock.city;
+        lineGlobal = firstThemeBlock.line;
+        themeGlobal = firstThemeBlock.color;
+        colorGlobal = firstThemeBlock.textColor === 'white' ? '#fff' : '#000';
+
+        return normalizedBlocks;
+    } catch (error) {
+        console.error('Failed to load from localStorage：', error);
+        alert(`Failed to load from localStorage：${(error as Error).message}`);
+        // 返回默认块，保证不报错
+        return [createBlock(1)];
+    }
+}
+
+export const DEFAULT_THEME: BlockTheme = {
     city: 'beijing',
     line: 'bj10',
     color: '#009bc0',
@@ -82,8 +171,6 @@ const MetroSignGenerator: React.FC = () => {
     });
 
     const toThemeTuple = (theme: BlockTheme): Theme => [theme.city, theme.line, theme.color, theme.textColor];
-    const normalizeTextColor = (value: unknown): 'black' | 'white' => (value === 'black' ? 'black' : 'white');
-
     const updateBlockTheme = (id: number, theme: BlockTheme) => {
         setBlocks(prevBlocks =>
             prevBlocks.map(block => {
@@ -140,7 +227,7 @@ const MetroSignGenerator: React.FC = () => {
     // 国际化翻译钩子，t函数用于获取对应语言的文本
     // ===== 核心状态管理 =====
     // 导视块列表（初始默认1个出口logo块）
-    const [blocks, setBlocks] = useState<BlockData[]>([createBlock(1)]);
+    const [blocks, setBlocks] = useState<BlockData[]>(loadLocalStorage());
     // 下一个新增导视块的ID（自增，避免重复）
     const [nextId, setNextId] = useState(2);
     // SVG预览区域的DOM引用（用于导出PNG时获取SVG内容）
@@ -163,7 +250,7 @@ const MetroSignGenerator: React.FC = () => {
      */
     const addBlock = () => {
         // 不可变更新数组（React状态更新规范）
-        setBlocks([...blocks, createBlock(nextId)]);
+        setBlocks([...blocks, createBlock(Math.max(nextId, ++blockNum))]);
         setNextId(nextId + 1);
     };
 
@@ -457,6 +544,7 @@ const MetroSignGenerator: React.FC = () => {
      * 3. 渲染分割线（若开启）
      */
     const SvgPreview = () => {
+        saveLocalStorage();
         // 计算所有导视块的累计宽度（用于确定SVG总宽度）
         const blockPositions = blocks.reduce((positions, block, index) => {
             const prevPosition = positions[index - 1] || 0;
@@ -628,48 +716,57 @@ const MetroSignGenerator: React.FC = () => {
         }
     };
 
-    const downloadJSON = () => {
-        try {
-            const fallbackTheme = getThemeFromGlobals();
-            // 导出时统一特殊属性键为 `${id}-${index}`，避免导入后因id变化导致丢失
-            const normalizedBlocks = blocks.map(block => {
-                const normalizedSpecialStyles: Record<string, string> = {};
-                Object.entries(block.specialStyles || {}).forEach(([rawKey, rawValue]) => {
-                    const match = rawKey.match(/-(\d+)$/);
-                    if (!match) return;
-                    const index = match[1];
-                    normalizedSpecialStyles[`${block.id}-${index}`] = String(rawValue ?? '');
-                });
-
-                const normalizedTheme = isThemeStyle(block.style)
-                    ? {
-                          city: block.theme?.city || fallbackTheme.city,
-                          line: block.theme?.line || fallbackTheme.line,
-                          color: block.theme?.color || normalizedSpecialStyles[`${block.id}-1`] || fallbackTheme.color,
-                          textColor: block.theme?.textColor || fallbackTheme.textColor,
-                      }
-                    : undefined;
-
-                if (normalizedTheme) {
-                    normalizedSpecialStyles[`${block.id}-1`] = normalizedTheme.color;
-                }
-
-                return {
-                    ...block,
-                    dragId: block.id,
-                    specialStyles: normalizedSpecialStyles,
-                    theme: normalizedTheme,
-                };
+    function getStringJson() {
+        const fallbackTheme = getThemeFromGlobals();
+        // 导出时统一特殊属性键为 `${id}-${index}`，避免导入后因id变化导致丢失
+        const normalizedBlocks = blocks.map(block => {
+            const normalizedSpecialStyles: Record<string, string> = {};
+            Object.entries(block.specialStyles || {}).forEach(([rawKey, rawValue]) => {
+                const match = rawKey.match(/-(\d+)$/);
+                if (!match) return;
+                const index = match[1];
+                normalizedSpecialStyles[`${block.id}-${index}`] = String(rawValue ?? '');
             });
 
-            const payload: MetroSignExportData = {
-                version: 1,
-                exportedAt: new Date().toISOString(),
-                backgroundColor,
-                blocks: normalizedBlocks,
-            };
-            const jsonString = JSON.stringify(payload, null, 4);
+            const normalizedTheme = isThemeStyle(block.style)
+                ? {
+                      city: block.theme?.city || fallbackTheme.city,
+                      line: block.theme?.line || fallbackTheme.line,
+                      color: block.theme?.color || normalizedSpecialStyles[`${block.id}-1`] || fallbackTheme.color,
+                      textColor: block.theme?.textColor || fallbackTheme.textColor,
+                  }
+                : undefined;
 
+            if (normalizedTheme) {
+                normalizedSpecialStyles[`${block.id}-1`] = normalizedTheme.color;
+            }
+
+            return {
+                ...block,
+                dragId: block.id,
+                specialStyles: normalizedSpecialStyles,
+                theme: normalizedTheme,
+            };
+        });
+
+        const payload: MetroSignExportData = {
+            version: 1,
+            exportedAt: new Date().toISOString(),
+            backgroundColor,
+            blocks: normalizedBlocks,
+        };
+        const jsonString = JSON.stringify(payload, null, 4);
+        return jsonString;
+    }
+
+    function saveLocalStorage() {
+        const jsonString = getStringJson();
+        localStorage.setItem('metro-sign-data', jsonString);
+    }
+
+    const downloadJSON = () => {
+        try {
+            const jsonString = getStringJson();
             // 2. 创建Blob对象（二进制大对象），指定JSON MIME类型
             const blob = new Blob([jsonString], { type: 'application/json' });
 
@@ -895,7 +992,7 @@ ${new XMLSerializer().serializeToString(clonedSvg)}`;
                 });
 
                 setBlocks(normalizedBlocks);
-                setNextId(Math.max(...normalizedBlocks.map(block => block.id), 0) + 1);
+                setNextId(Math.max(...normalizedBlocks.map(block => block.id), blockNum++) + 1);
 
                 if (typeof raw.backgroundColor === 'string') {
                     setBackgroundColor(raw.backgroundColor);
@@ -924,7 +1021,6 @@ ${new XMLSerializer().serializeToString(clonedSvg)}`;
     };
 
     const paletteFrameUrl = paletteHelper.current.getIframeUrl(rmgRuntime.getAppName());
-
     // ===== 组件主布局 =====
     return (
         <div className="metro-sign-generator">
@@ -1009,6 +1105,5 @@ ${new XMLSerializer().serializeToString(clonedSvg)}`;
 
 // 导出组件供外部使用
 export default MetroSignGenerator;
-
 // 在模块加载时注册默认块类型（只需调用一次）
 registerDefaultBlockTypes();

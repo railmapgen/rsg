@@ -623,6 +623,7 @@ const arrowMap: Record<string, { href: string; rotation: number }> = {
  * @returns React.ReactNode[]：该块对应的 SVG 元素列表
  */
 export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: number): React.ReactNode[] {
+    // 在每次渲染块时保存当前状态到本地存储，确保数据持久化
     const config = blockTypeRegistry[block.style];
 
     if (!config) {
