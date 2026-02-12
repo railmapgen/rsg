@@ -310,7 +310,7 @@ export function registerDefaultBlockTypes() {
         return elems;
     });
 
-    registerBlock('ExitText', 512, specialStyleConfigs.ExitText, (block, xPos) => {
+    registerBlock('ExitText', 256, specialStyleConfigs.ExitText, (block, xPos) => {
         const elems: React.ReactNode[] = [];
         const exitLetter = block.specialStyles[`${block.id}-0`] || 'A';
         const exitSubscript = block.specialStyles[`${block.id}-1`] || '';

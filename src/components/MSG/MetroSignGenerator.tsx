@@ -686,8 +686,6 @@ const MetroSignGenerator: React.FC = () => {
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url); // 释放URL对象，避免内存泄漏
-
-            alert('JSON文件下载成功！');
         } catch (error) {
             // 异常处理：序列化失败/下载失败时提示
             console.error('Error：', error);
