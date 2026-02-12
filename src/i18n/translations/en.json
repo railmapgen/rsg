@@ -7,8 +7,11 @@
         "new_block": "Add New Block",
         "export_as_png": "Download as PNG",
         "export_as_json": "Download as JSON",
+        "export_as_svg": "Download as SVG",
         "import_json": "Import JSON",
-        "background_color": "Background Color"
+        "background_color": "Background Color",
+        "release_to_delete": "Release to delete",
+        "drag_here_to_delete": "Drag here to delete"
     },
     "blocks": {
         "block": "Block",
@@ -68,5 +71,5 @@
         "↙": "↙",
         "↖": "↖"
     },
-    "copy": "Some materials are from https://centralgo.site/vitool/. Please contact us for removal if there is any infringement."
+    "copy": "Some materials are from https://centralgo.site/vitool/."
 }

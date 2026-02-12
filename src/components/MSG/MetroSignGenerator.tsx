@@ -695,6 +695,138 @@ const MetroSignGenerator: React.FC = () => {
         }
     };
 
+    // 定义下载SVG的函数
+    const downloadSVG = async () => {
+        // 改为async函数（核心：处理异步资源下载）
+        // 1. 获取SVG DOM元素，做非空校验
+        const svgElement = svgRef.current;
+        if (!svgElement) {
+            console.error('未找到SVG元素，请确认svgRef已正确绑定');
+            alert('下载失败：未检测到SVG内容');
+            return;
+        }
+
+        // ========== 新增：内部辅助函数 - 远程资源转Base64 ==========
+        const convertToBase64 = async (url: string, mimeType: string): Promise<string> => {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`资源下载失败：${response.status}`);
+                const arrayBuffer = await response.arrayBuffer();
+                const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+                return `data:${mimeType};base64,${base64}`;
+            } catch (error) {
+                console.warn(`资源(${url})转Base64失败，保留原链接：`, error);
+                return url; // 降级：保留原URL，不影响整体导出
+            }
+        };
+
+        try {
+            // 2. 克隆SVG元素（避免修改原DOM），补充SVG必需的XML命名空间
+            const clonedSvg = svgElement.cloneNode(true) as SVGElement;
+            // 确保SVG根节点有正确的xmlns命名空间
+            if (!clonedSvg.hasAttribute('xmlns')) {
+                clonedSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            }
+
+            // ========== 新增：处理1 - 内联远程图片（<image>标签） ==========
+            const imageNodes = clonedSvg.querySelectorAll('image');
+            for (const img of imageNodes) {
+                const imgUrl = img.getAttribute('xlink:href') || img.getAttribute('href');
+                if (!imgUrl || imgUrl.startsWith('data:')) continue; // 跳过已内联的图片
+
+                // 自动识别图片MIME类型
+                const mimeType = imgUrl.endsWith('png')
+                    ? 'image/png'
+                    : imgUrl.endsWith('jpg') || imgUrl.endsWith('jpeg')
+                      ? 'image/jpeg'
+                      : imgUrl.endsWith('svg')
+                        ? 'image/svg+xml'
+                        : 'image/png';
+
+                const base64Url = await convertToBase64(imgUrl, mimeType);
+                img.setAttribute('href', base64Url);
+                img.removeAttribute('xlink:href'); // 移除旧属性
+            }
+
+            // ========== 新增：处理2 - 内联远程字体（@font-face） ==========
+            const styleNodes = clonedSvg.querySelectorAll('style');
+            for (const style of styleNodes) {
+                let cssText = style.textContent || '';
+                // 匹配@font-face中的远程字体URL
+                const fontUrlRegex = /@font-face\s*{[^}]*url\(['"]?([^'")]+)['"]?\)[^}]*}/g;
+                const fontMatches = [...cssText.matchAll(fontUrlRegex)];
+
+                for (const match of fontMatches) {
+                    const fontUrl = match[1];
+                    if (!fontUrl || fontUrl.startsWith('data:')) continue;
+
+                    // 自动识别字体MIME类型
+                    const mimeType = fontUrl.endsWith('woff2')
+                        ? 'font/woff2'
+                        : fontUrl.endsWith('woff')
+                          ? 'font/woff'
+                          : fontUrl.endsWith('ttf')
+                            ? 'font/ttf'
+                            : 'application/octet-stream';
+
+                    const base64Font = await convertToBase64(fontUrl, mimeType);
+                    cssText = cssText.replace(fontUrl, base64Font);
+                }
+                style.textContent = cssText;
+            }
+
+            // ========== 新增：处理3 - 内联外部CSS链接（<link>标签） ==========
+            const linkNodes = clonedSvg.querySelectorAll('link[rel="stylesheet"]');
+            for (const link of linkNodes) {
+                const cssUrl = link.getAttribute('href');
+                if (!cssUrl) {
+                    link.remove();
+                    continue;
+                }
+
+                try {
+                    const response = await fetch(cssUrl);
+                    if (response.ok) {
+                        const cssText = await response.text();
+                        // 创建内联style标签替换link
+                        const inlineStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+                        inlineStyle.textContent = cssText;
+                        link.parentNode?.replaceChild(inlineStyle, link);
+                    } else {
+                        link.remove();
+                    }
+                } catch (error) {
+                    console.warn(`外部CSS(${cssUrl})加载失败，已移除：`, error);
+                    link.remove();
+                }
+            }
+
+            // 3. 序列化SVG为完整的字符串（包含XML声明，符合SVG文件标准）
+            const svgString = `<?xml version="1.0" encoding="UTF-8"?>
+${new XMLSerializer().serializeToString(clonedSvg)}`;
+
+            // 4. 创建Blob对象（指定SVG的MIME类型）
+            const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            // 5. 创建临时下载链接
+            const downloadLink = document.createElement('a');
+            // 生成下载URL
+            const url = URL.createObjectURL(blob);
+            downloadLink.href = url;
+            // 设置下载文件名（可自定义，比如"地铁导视.svg"）
+            downloadLink.download = 'subway-sign.svg';
+            // 触发点击下载
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+
+            // 6. 清理临时资源（避免内存泄漏）
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('ERROR：', error);
+            alert(`ERROR:${(error as Error).message}`);
+        }
+    };
+
     const importJSON = () => {
         fileInputRef.current?.click();
     };
@@ -821,7 +953,14 @@ const MetroSignGenerator: React.FC = () => {
                             <Button onClick={downloadJSON} className="download-btn">
                                 {t('main_area.export_as_json')}
                             </Button>
-                            <Button onClick={importJSON} className="download-btn">
+                            <Button onClick={downloadSVG} className="download-btn">
+                                {t('main_area.export_as_svg')}
+                            </Button>
+                            <Button
+                                onClick={importJSON}
+                                className="download-btn"
+                                style={{ color: '#000', backgroundColor: 'yellow' }}
+                            >
                                 {t('main_area.import_json')}
                             </Button>
                             <input

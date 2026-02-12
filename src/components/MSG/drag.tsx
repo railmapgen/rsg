@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { BlockData } from './configs';
 import { getBlockWidth } from './utils/utils';
+import { useTranslation } from 'react-i18next';
 
 interface BlockProps {
     data: BlockData;
@@ -114,6 +115,7 @@ interface DeleteZoneProps {
 }
 
 export const DeleteZone: React.FC<DeleteZoneProps> = ({ onDrop }) => {
+    const { t } = useTranslation();
     const [{ isOver, canDrop }, drop] = useDrop({
         accept: 'CARD',
         drop: (item: { id: number }) => {
@@ -140,7 +142,7 @@ export const DeleteZone: React.FC<DeleteZoneProps> = ({ onDrop }) => {
 
     return (
         <div ref={drop as unknown as React.RefCallback<HTMLDivElement>} style={zoneStyle} aria-hidden={!canDrop}>
-            {isOver ? '释放以删除' : '拖到此处删除'}
+            {isOver ? t('main_area.release_to_delete') : t('main_area.drag_here_to_delete')}
         </div>
     );
 };

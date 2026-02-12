@@ -8,7 +8,10 @@
                       "export_as_png":  "PNGとしてダウンロード",
                       "background_color":  "背景色",
                       "export_as_json":  "JSONとしてダウンロード",
-                      "import_json":  "JSONをインポート"
+                      "import_json":  "JSONをインポート",
+                      "export_as_svg":  "SVGとしてダウンロード",
+                      "release_to_delete": "離すと削除",
+                      "drag_here_to_delete": "ここにドラッグして削除"
                   },
     "blocks":  {
                    "block":  "ブロック",
@@ -68,5 +71,5 @@
                         "↙":  "↙",
                         "↖":  "↖"
                     },
-    "copy":  "一部の素材はhttps://centralgo.site/vitool/より提供されています。侵害がある場合は削除のためご連絡ください。"
+    "copy":  "一部の素材はhttps://centralgo.site/vitool/より提供されています。"
 }

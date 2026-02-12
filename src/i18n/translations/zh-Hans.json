@@ -8,7 +8,10 @@
                       "export_as_png":  "下载png",
                       "background_color":  "背景颜色",
                       "export_as_json":  "导出 JSON",
-                      "import_json":  "导入 JSON"
+                      "export_as_svg":  "导出 SVG",
+                      "import_json":  "导入 JSON",
+                      "release_to_delete": "释放以删除",
+                      "drag_here_to_delete": "拖到此处删除"
                   },
     "blocks":  {
                    "block":  "块",
@@ -68,5 +71,5 @@
                         "↙":  "↙",
                         "↖":  "↖"
                     },
-    "copy":  "部分素材来自https://centralgo.site/vitool/，如有侵权请联系删除"
+    "copy":  "部分素材来自https://centralgo.site/vitool/"
 }

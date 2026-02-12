@@ -287,7 +287,6 @@ body {
   width: 100%; 
   /* 若需要blocks-container内的blocks-box垂直排列则保留column，否则改为row */
   /* flex-direction: column;  */
-  flex-direction: row; /* 可选：如果blocks-container下的多个blocks-box也要并排 */
   flex-wrap: wrap; /* 适配小屏幕自动换行 */
 }
 
