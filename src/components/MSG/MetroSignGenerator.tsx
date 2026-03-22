@@ -89,7 +89,7 @@ const MetroSignGenerator: React.FC = () => {
                     city: String(paletteTheme[0]),
                     line: String(paletteTheme[1]),
                     color: String(paletteTheme[2]),
-                    textColor: paletteTheme[3] === 'black' ? 'black' : 'white',
+                    textColor: paletteTheme[3] === '#000' ? '#000' : '#fff',
                 };
                 setConfirmedColor(toThemeTuple(nextTheme));
                 updateBlockTheme(blockId, nextTheme);

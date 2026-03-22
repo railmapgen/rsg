@@ -1,4 +1,4 @@
-export type Theme = [string, string, string, 'black' | 'white'];
+export type Theme = [string, string, string, '#000' | '#fff'];
 
 /**
  * 适配调色板内部确定按钮的通信助手类（支持多次打开/关闭）

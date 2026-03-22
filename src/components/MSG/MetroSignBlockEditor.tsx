@@ -141,7 +141,7 @@ const MetroSignBlockEditor: React.FC<Props> = ({
                                 border: 'none',
                             }}
                         >
-                            鈼?
+                            ●
                         </Button>
                     </React.Fragment>
                 );

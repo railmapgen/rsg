@@ -5,7 +5,7 @@ interface BlockTheme {
     city: string;
     line: string;
     color: string;
-    textColor: 'black' | 'white';
+    textColor: '#000' | '#fff';
 }
 
 type ColorDefaultValue = string | Partial<BlockTheme>;
@@ -77,7 +77,7 @@ const DEFAULT_THEME: BlockTheme = {
     city: 'beijing',
     line: 'bj10',
     color: DEFAULT_THEME_COLOR,
-    textColor: 'white',
+    textColor: '#fff',
 };
 const GROUP_SINGLE = 'blocks.styles.basic_elements';
 const GROUP_ARROW = 'blocks.styles.arrow_elements';
@@ -255,10 +255,10 @@ function normalizeThemeDefaultValue(
         line: typeof defaultValue.line === 'string' ? defaultValue.line : fallbackTheme.line,
         color: typeof defaultValue.color === 'string' ? defaultValue.color : fallbackTheme.color,
         textColor:
-            defaultValue.textColor === 'black'
-                ? 'black'
-                : defaultValue.textColor === 'white'
-                  ? 'white'
+            defaultValue.textColor === '#000'
+                ? '#000'
+                : defaultValue.textColor === '#fff'
+                  ? '#fff'
                   : fallbackTheme.textColor,
     };
 }
@@ -621,7 +621,7 @@ export function registerDefaultBlockTypes() {
                     city: 'beijing',
                     line: 'bj10',
                     color: '#00a3c2',
-                    textColor: 'white',
+                    textColor: '#fff',
                 },
             },
         ],
@@ -706,7 +706,7 @@ export function registerDefaultBlockTypes() {
                     city: 'beijing',
                     line: 'xijiao',
                     color: '#ba0f1e',
-                    textColor: 'white',
+                    textColor: '#fff',
                 },
             },
         ],
