@@ -11,7 +11,7 @@ export const DEFAULT_THEME: BlockTheme = {
     city: 'beijing',
     line: 'bj10',
     color: '#009bc0',
-    textColor: 'white',
+    textColor: '#fff',
 };
 
 const STORAGE_KEY = 'metro-sign-data';
@@ -52,14 +52,14 @@ export const getThemeFromGlobals = (): BlockTheme => ({
     city: themeGlobals.city || DEFAULT_THEME.city,
     line: themeGlobals.line || DEFAULT_THEME.line,
     color: themeGlobals.color || DEFAULT_THEME.color,
-    textColor: themeGlobals.textColorHex === '#000' ? 'black' : 'white',
+    textColor: themeGlobals.textColorHex === '#000' ? '#000' : '#fff',
 });
 
 export const syncThemeGlobals = (theme: BlockTheme) => {
     themeGlobals.city = theme.city;
     themeGlobals.line = theme.line;
     themeGlobals.color = theme.color;
-    themeGlobals.textColorHex = theme.textColor === 'white' ? '#fff' : '#000';
+    themeGlobals.textColorHex = theme.textColor === '#fff' ? '#fff' : '#000';
 };
 
 export const getNextBlockId = (nextId: number) => {
@@ -118,7 +118,7 @@ export function normalizeBlocks(rawBlocks: Partial<BlockData>[]): NormalizeBlock
                       line: typeof themeFromItem?.line === 'string' ? themeFromItem.line : defaultTheme.line,
                       color: typeof themeFromItem?.color === 'string' ? themeFromItem.color : defaultTheme.color,
                       textColor:
-                          themeFromItem?.textColor === 'black' || themeFromItem?.textColor === 'white'
+                          themeFromItem?.textColor === '#000' || themeFromItem?.textColor === '#fff'
                               ? themeFromItem.textColor
                               : defaultTheme.textColor,
                   };
