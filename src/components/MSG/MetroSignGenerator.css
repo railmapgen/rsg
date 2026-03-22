@@ -1,240 +1,334 @@
 /* src/scripts/MetroSignGenerator.css */
 /* 导入思源黑体字体 */
 @font-face {
-  font-family: 'Noto Sans SC'; /* 自定义字体名称 */
-  font-style: normal; /* 字体样式，normal表示常规 */
-  font-weight: 30; /* 字体粗细，400表示常规 */
-  src:
-    url('/font/SourceHanSansCN-Normal.otf') format('opentype'); /* TTF格式 */
-    
+    font-family: 'Noto Sans SC'; /* 自定义字体名称 */
+    font-style: normal; /* 字体样式，normal表示常规 */
+    font-weight: 400; /* 字体粗细，400表示常规 */
+    src: url('/font/SourceHanSansSC-Normal.otf') format('opentype'); /* TTF格式 */
 }
 
 /* 使用字体 */
 body {
-  font-family: 'Noto Sans SC', sans-serif; /* 使用导入的字体 */
+    font-family: 'Noto Sans SC', sans-serif; /* 使用导入的字体 */
 }
 
 .metro-sign-generator {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f5f7fa;
-  min-height: 100vh;
-  overflow: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f7fa;
+    min-height: 100vh;
+    overflow: auto;
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 30px;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 .header h1 {
-  color: #041c31;
-  margin-bottom: 10px;
+    color: #041c31;
+    margin-bottom: 10px;
 }
 
 .header p {
-  color: #666;
-  font-size: 18px;
+    color: #666;
+    font-size: 18px;
 }
 
 .container {
-  display: flex;
-  gap: 30px;
+    display: flex;
+    gap: 30px;
 }
 
 .controls {
-  flex: 1;
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .preview {
-  flex: 1;
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .preview h2 {
-  margin-top: 0;
-  color: #041c31;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+    margin-top: 0;
+    color: #041c31;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
 }
 
 .preview-container {
-  overflow-x: auto;
-  width: 100%;
-  padding: 1px;
-  position: fixed;
-  top: 20px; /* 从顶部留出空间，避免覆盖调色板 */
-  z-index: 10000; /* 远低于调色板的 999999，确保不覆盖 */
-  max-height: calc(100vh - 40px); /* 限制高度，避免占满屏幕 */
-  background-color: #fff  ;
+    overflow-x: auto;
+    width: 100%;
+    padding: 1px;
+    position: fixed;
+    top: 20px; /* 从顶部留出空间，避免覆盖调色板 */
+    z-index: 10000; /* 远低于调色板的 999999，确保不覆盖 */
+    max-height: calc(100vh - 40px); /* 限制高度，避免占满屏幕 */
+    background-color: #fff;
 }
 
 .actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
 }
 
-.add-btn, .download-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
+.add-btn,
+.download-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
 .add-btn {
-  background-color: #00aa52;
-  color: white;
+    background-color: #00aa52;
+    color: white;
 }
 
 .add-btn:hover {
-  background-color: #008a42;
+    background-color: #008a42;
 }
 
 .download-btn {
-  background-color: #00a3c2;
-  color: white;
+    background-color: #00a3c2;
+    color: white;
 }
 
 .download-btn:hover {
-  background-color: #0083a0;
+    background-color: #0083a0;
 }
 
 .bg-color {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .bg-color label {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 .block-config {
-  background: #f9fbfd;
-  border-radius: 8px;
-  border: 1px solid #e1e8ed;
-  width: 125px;
-  display: inline-block;
+    background: #f9fbfd;
+    border-radius: 8px;
+    border: 1px solid #e1e8ed;
+    width: 125px;
+    display: inline-block;
 }
 
 .block-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
 .block-header h3 {
-  margin: 0;
-  color: #041c31;
-  display: flex;
-  align-items: center;
+    margin: 0;
+    color: #041c31;
+    display: flex;
+    align-items: center;
 }
 
 .remove-btn {
-  background: #ff6b6b;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
 }
 
 .section {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .section label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #333;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
 }
 
 .radio-group {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 .radio-group label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: normal;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: normal;
+    cursor: pointer;
 }
 
 .style-group h4 {
-  margin: 15px 0 10px;
-  color: #555;
+    margin: 15px 0 10px;
+    color: #555;
+}
+
+.style-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid #d9e2ec;
+    border-radius: 8px;
+    background: #f8fbff;
+}
+
+.style-summary-name {
+    font-weight: 600;
+    color: #22303c;
+}
+
+.style-picker-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.style-picker-group h4 {
+    margin: 0 0 10px;
+    color: #4f5d6b;
+}
+
+.style-picker-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.style-picker-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d9e2ec;
+    border-radius: 8px;
+    background: #fff;
+    color: #22303c;
+    cursor: pointer;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s;
+}
+
+.style-picker-item:hover {
+    background: #f4f9ff;
+    border-color: #8fc5ff;
+}
+
+.style-picker-item.is-active {
+    background: #eaf5ff;
+    border-color: #2f9bff;
+}
+
+.style-picker-current {
+    font-size: 12px;
+    color: #2f9bff;
+    font-weight: 600;
+}
+
+.style-picker-empty {
+    padding: 16px 0;
+    color: #6b7785;
+    text-align: center;
 }
 
 .radio-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .radio-grid > * {
-  flex: 1 1 auto; /* 每个子元素根据内容宽度自动调整 */
+    flex: 1 1 auto; /* 每个子元素根据内容宽度自动调整 */
 }
 
 .style-option {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px;
-  background: #f0f4f8;
-  border-radius: 4px;
-  width: 100px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px;
+    background: #f0f4f8;
+    border-radius: 4px;
+    width: 100px;
 }
 
 .special-styles {
-  background: #eef7ff;
-  padding: 15px;
-  border-radius: 8px;
-  border-left: 3px solid #00a9c6;
+    background: #eef7ff;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid #00a9c6;
 }
 
 .special-input {
-  margin-bottom: 12px;
+    margin-bottom: 12px;
 }
 
 .special-input label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
 }
 
-.special-input input[type="text"],
-.special-input input[type="number"] {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
+.special-input input[type='text'],
+.special-input input[type='number'] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.width-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.width-control-auto {
+    flex: 0 0 auto;
+    min-width: 2.5rem;
+    color: #566372;
+    font-size: 14px;
+}
+
+.width-control-slider {
+    flex: 1 1 auto;
+}
+
+.width-control-input {
+    flex: 0 0 110px;
 }
 
 /* .collapse-btn {
@@ -251,95 +345,94 @@ body {
 } */
 
 .preview-container {
-  overflow-x: auto;
-  width: 100%;
-  padding: 1px;
-  position: fixed;  /* 核心：固定定位 */
-  top: 0; 
+    overflow-x: auto;
+    width: 100%;
+    padding: 1px;
+    position: fixed; /* 核心：固定定位 */
+    top: 0;
 }
 
 /* 响应式设计 */
 @media (max-width: 1000px) {
-  .container {
-    flex-direction: column;
-  }
-  
-  .radio-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    .container {
+        flex-direction: column;
+    }
+
+    .radio-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 600px) {
-  .actions {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .radio-grid {
-    grid-template-columns: 1fr;
-  }
+    .actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .radio-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* 容器整体 - 如需blocks-container下的blocks-box也并排，可调整此属性 */
 .blocks-container {
-  display: flex; 
-  gap: 20px; 
-  width: 100%; 
-  /* 若需要blocks-container内的blocks-box垂直排列则保留column，否则改为row */
-  /* flex-direction: column;  */
-  flex-wrap: wrap; /* 适配小屏幕自动换行 */
+    gap: 20px;
+    width: 100%;
+    /* 若需要blocks-container内的blocks-box垂直排列则保留column，否则改为row */
+    /* flex-direction: column;  */
+    flex-wrap: wrap; /* 适配小屏幕自动换行 */
 }
 
 .blocks-box {
-  flex: 1; 
-  padding: 20px;
-  box-sizing: border-box;
-  display: flex !important;
-  flex-direction: column !important; /* 强制垂直：name在上，specials在下 */
-  align-items: flex-start;
-  gap: 15px; /* name和specials之间的垂直间距 */
-  width: 100%;
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex !important;
+    flex-direction: column !important; /* 强制垂直：name在上，specials在下 */
+    align-items: flex-start;
+    gap: 15px; /* name和specials之间的垂直间距 */
+    width: 100%;
 }
 
 /* blocks-box-name：内部元素水平并排 */
 .blocks-box-name {
-  display: flex !important;
-  flex-direction: row !important; /* 内部元素左右并排 */
-  align-items: center; /* 内部元素垂直居中 */
-  gap: 10px; /* 内部元素之间的水平间距 */
-  width: 100%; /* 占满父容器宽度 */
-  flex-wrap: wrap; /* 小屏自动换行 */
+    display: flex !important;
+    flex-direction: row !important; /* 内部元素左右并排 */
+    align-items: center; /* 内部元素垂直居中 */
+    gap: 10px; /* 内部元素之间的水平间距 */
+    width: 100%; /* 占满父容器宽度 */
+    flex-wrap: wrap; /* 小屏自动换行 */
 }
 
 /* blocks-box-specials：保持原有垂直（可根据需要调整） */
 .blocks-box-specials {
-  display: flex;
-  flex-direction: column; /* 内部垂直，和name区分开 */
-  gap: 10px; /* 内部元素垂直间距 */
-  width: 100%; /* 占满父容器宽度 */
+    display: flex;
+    flex-direction: column; /* 内部垂直，和name区分开 */
+    gap: 10px; /* 内部元素垂直间距 */
+    width: 100%; /* 占满父容器宽度 */
 }
 
 /* 响应式兼容（仅优化间距，不改变核心布局） */
 @media (max-width: 600px) {
-  .actions {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .radio-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .blocks-box-name {
-    gap: 8px; /* 小屏缩小内部间距 */
-  }
+    .actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .radio-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .blocks-box-name {
+        gap: 8px; /* 小屏缩小内部间距 */
+    }
 }
 .blocks-box-specials {
-  flex: 0 0 70%;
+    flex: 0 0 70%;
 }
 
 .placeholder {
-  height: 170px; /* 占位符高度，保持与预览区一致 */
+    height: 170px; /* 占位符高度，保持与预览区一致 */
 }
 
 .card.dragging {
@@ -348,41 +441,41 @@ body {
 
 /* 遮罩层：全屏覆盖 + 黑色半透明 + 置顶 + 阻止底层交互 */
 .colorPicker-mask {
-  /* 1. 全屏固定定位（置顶，不随滚动动） */
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* 2. 黑色半透明背景（透明度可调整，0.7 是常用值） */
-  background-color: rgba(0, 0, 0, 0.7);
-  /* 3. 置顶（z-index 要足够高，避免被其他元素覆盖） */
-  z-index: 999999;
-  /* 4. Flex 布局实现子元素居中（最简单的居中方式） */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* 5. 阻止底层内容被选中/拖拽（增强体验） */
-  user-select: none;
-  /* 6. 确保遮罩层可交互（阻止点击穿透到底层） */
-  pointer-events: auto;
+    /* 1. 全屏固定定位（置顶，不随滚动动） */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* 2. 黑色半透明背景（透明度可调整，0.7 是常用值） */
+    background-color: rgba(0, 0, 0, 0.7);
+    /* 3. 置顶（z-index 要足够高，避免被其他元素覆盖） */
+    z-index: 999999;
+    /* 4. Flex 布局实现子元素居中（最简单的居中方式） */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 5. 阻止底层内容被选中/拖拽（增强体验） */
+    user-select: none;
+    /* 6. 确保遮罩层可交互（阻止点击穿透到底层） */
+    pointer-events: auto;
 }
 
 /* 调色板容器：居中 + 固定尺寸 + 置顶 */
 .colorPicker {
-  top: 50px;
-  width: 80%;
-  max-width: 500px;
-  height: 50%;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  z-index: 1000000;
-  min-width: 300px; /* 新增：最小宽度，避免内容为空时塌陷 */
-  min-height: 400px; /* 新增：最小高度 */
+    top: 50px;
+    width: 80%;
+    max-width: 500px;
+    height: 50%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000000;
+    min-width: 300px; /* 新增：最小宽度，避免内容为空时塌陷 */
+    min-height: 400px; /* 新增：最小高度 */
 }
 
 /* 可选：隐藏/显示控制（配合 JS 切换） */
 .colorPicker-mask.hidden {
-  display: none;
+    display: none;
 }

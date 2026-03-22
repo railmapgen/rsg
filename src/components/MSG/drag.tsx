@@ -1,33 +1,46 @@
-import React, { useRef, useCallback, useEffect } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
-import { BlockData } from './configs';
-import { getBlockWidth } from './utils/utils';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useDrag, useDragLayer, useDrop } from 'react-dnd';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { BlockData, getBlockWidth, renderBlockSVG } from './configs';
 
-interface BlockProps {
+const DRAG_TYPE = 'CARD';
+
+type DragCardItem = {
+    id: number;
+    fromIndex: number;
+    block: BlockData;
+};
+
+interface DraggableSvgBlockProps {
     data: BlockData;
     index: number;
     moveCard: (fromIndex: number, toIndex: number) => void;
+    onSelect: (id: number) => void;
+    isSelected: boolean;
     children?: React.ReactNode;
 }
 
-const Card: React.FC<BlockProps> = ({ data, index, moveCard, children }) => {
+export const DraggableSvgBlock: React.FC<DraggableSvgBlockProps> = ({
+    data,
+    index,
+    moveCard,
+    onSelect,
+    isSelected,
+    children,
+}) => {
     const processingTimer = useRef<NodeJS.Timeout | null>(null);
-    const hoverRef = useRef<HTMLDivElement | null>(null);
+    const hoverRef = useRef<SVGGElement | null>(null);
 
-    const [{ isDragging }, dragRef] = useDrag<
-        { fromIndex: number; id: number; blockWidth: number },
-        unknown,
-        { isDragging: boolean }
-    >({
-        type: 'CARD',
+    const [{ isDragging }, dragRef] = useDrag<DragCardItem, unknown, { isDragging: boolean }>({
+        type: DRAG_TYPE,
         item: useCallback(
             () => ({
                 fromIndex: index,
                 id: data.id,
-                blockWidth: data.style ? getBlockWidth(data.style) : 128,
+                block: data,
             }),
-            [index, data.id, data.style]
+            [data, index]
         ),
         collect: monitor => ({
             isDragging: monitor.isDragging(),
@@ -40,9 +53,9 @@ const Card: React.FC<BlockProps> = ({ data, index, moveCard, children }) => {
         },
     });
 
-    const [, dropRef] = useDrop({
-        accept: 'CARD',
-        hover: (draggedItem: { fromIndex: number; id: number }, monitor) => {
+    const [, dropRef] = useDrop<DragCardItem>({
+        accept: DRAG_TYPE,
+        hover: (draggedItem, monitor) => {
             const dragIndex = draggedItem.fromIndex;
             const hoverIndex = index;
 
@@ -53,16 +66,11 @@ const Card: React.FC<BlockProps> = ({ data, index, moveCard, children }) => {
             if (!clientOffset || !hoverTarget) return;
 
             const rect = hoverTarget.getBoundingClientRect();
+            const hoverMiddleX = rect.left + rect.width / 2;
+            const pointerX = clientOffset.x;
 
-            // 自动根据元素长宽判断横向或纵向列表
-            const isHorizontal = rect.width > rect.height;
-
-            // 使用水平判断或垂直判断
-            const hoverMiddle = isHorizontal ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
-            const pointerPos = isHorizontal ? clientOffset.x : clientOffset.y;
-
-            if (dragIndex < hoverIndex && pointerPos < hoverMiddle) return;
-            if (dragIndex > hoverIndex && pointerPos > hoverMiddle) return;
+            if (dragIndex < hoverIndex && pointerX < hoverMiddleX) return;
+            if (dragIndex > hoverIndex && pointerX > hoverMiddleX) return;
 
             if (processingTimer.current) {
                 clearTimeout(processingTimer.current);
@@ -70,20 +78,14 @@ const Card: React.FC<BlockProps> = ({ data, index, moveCard, children }) => {
 
             processingTimer.current = setTimeout(() => {
                 moveCard(dragIndex, hoverIndex);
-                try {
-                    // 更新拖拽对象索引，避免后续 hover 继续用旧索引触发重复交换
-                    (draggedItem as { fromIndex: number }).fromIndex = hoverIndex;
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                } catch (e) {
-                    // ignore
-                }
+                draggedItem.fromIndex = hoverIndex;
                 processingTimer.current = null;
             }, 20);
         },
     });
 
     const bindRef = useCallback(
-        (el: HTMLDivElement | null) => {
+        (el: SVGGElement | null) => {
             hoverRef.current = el;
             dragRef(el);
             dropRef(el);
@@ -100,25 +102,94 @@ const Card: React.FC<BlockProps> = ({ data, index, moveCard, children }) => {
     }, []);
 
     return (
-        <div ref={bindRef} role="listitem" aria-grabbed={isDragging}>
+        <g
+            ref={bindRef}
+            data-selected={isSelected ? 'true' : 'false'}
+            onClick={event => {
+                event.stopPropagation();
+                onSelect(data.id);
+            }}
+            style={{
+                cursor: isDragging ? 'grabbing' : 'grab',
+                opacity: isDragging ? 0.2 : 1,
+                filter: isSelected
+                    ? 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.45))'
+                    : undefined,
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+            }}
+        >
             {children}
-        </div>
+        </g>
     );
 };
 
-/**
- * 可拖入删除区组件
- * 使用：<DeleteZone onDrop={id => removeBlock(id)} />
- */
+export const SvgDragLayer: React.FC = () => {
+    const { isDragging, item, currentOffset, initialClientOffset, initialSourceClientOffset } = useDragLayer(
+        monitor => ({
+            item: monitor.getItem() as DragCardItem | null,
+            currentOffset: monitor.getClientOffset(),
+            initialClientOffset: monitor.getInitialClientOffset(),
+            initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
+            isDragging: monitor.isDragging(),
+        })
+    );
+
+    if (!isDragging || !item || !currentOffset) {
+        return null;
+    }
+
+    const blockWidth = getBlockWidth(item.block);
+    const anchorX =
+        initialClientOffset && initialSourceClientOffset
+            ? initialClientOffset.x - initialSourceClientOffset.x
+            : blockWidth / 2;
+    const anchorY =
+        initialClientOffset && initialSourceClientOffset ? initialClientOffset.y - initialSourceClientOffset.y : 64;
+    const svgElements = renderBlockSVG(item.block, 0, blockWidth);
+
+    if (item.block.cutLine) {
+        svgElements.push(
+            <rect
+                key={`${item.block.id}-cutline-preview`}
+                x={blockWidth - 2.5}
+                y={10}
+                width={5}
+                height={108}
+                fill="#fff017"
+            />
+        );
+    }
+
+    const preview = (
+        <div
+            style={{
+                position: 'fixed',
+                left: currentOffset.x - anchorX,
+                top: currentOffset.y - anchorY,
+                pointerEvents: 'none',
+                zIndex: 1000001,
+                opacity: 0.95,
+            }}
+        >
+            <svg width={blockWidth} height={128} viewBox={`0 0 ${blockWidth} 128`} xmlns="http://www.w3.org/2000/svg">
+                {svgElements}
+            </svg>
+        </div>
+    );
+
+    return createPortal(preview, document.body);
+};
+
 interface DeleteZoneProps {
     onDrop: (id: number) => void;
 }
 
 export const DeleteZone: React.FC<DeleteZoneProps> = ({ onDrop }) => {
     const { t } = useTranslation();
-    const [{ isOver, canDrop }, drop] = useDrop({
-        accept: 'CARD',
-        drop: (item: { id: number }) => {
+    const [{ isOver, canDrop }, drop] = useDrop<DragCardItem, unknown, { isOver: boolean; canDrop: boolean }>({
+        accept: DRAG_TYPE,
+        drop: item => {
             onDrop(item.id);
         },
         collect: monitor => ({
@@ -146,6 +217,3 @@ export const DeleteZone: React.FC<DeleteZoneProps> = ({ onDrop }) => {
         </div>
     );
 };
-
-export default Card;
-export type { BlockProps };
