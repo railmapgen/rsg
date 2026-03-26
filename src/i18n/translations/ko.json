@@ -1,12 +1,19 @@
 {
     "head_bar": {
-        "project_name": "지하철 안내 표지판 생성기"
+        "project_name": "지하철 안내 표지판 생성기",
+        "go_back": "뒤로",
+        "tutorial": "가이드",
+        "scroll_left": "왼쪽으로 이동",
+        "scroll_right": "오른쪽으로 이동",
+        "export_menu": "내보내기",
+        "import_menu": "가져오기",
+        "delete_selected": "선택 요소 삭제"
     },
     "main_area": {
         "preview": "표지판 미리보기",
         "new_block": "새 요소 추가",
         "delete_all": "전체 삭제",
-        "confirm_delete_all": "모든 요소를 삭제하고 기본 요소 1개로 초기화할까요?",
+        "confirm_delete_all": "모든 요소를 삭제할까요?",
         "export_as_png": "PNG로 다운로드",
         "background_color": "배경색",
         "export_as_json": "JSON으로 내보내기",
@@ -28,17 +35,24 @@
             "exit_logo": "출구 로고",
             "line_text": "문자 노선",
             "arrow": "화살표",
+            "split": "구분점",
             "toilet": "화장실",
             "blank": "공백",
             "line_space": "숫자 노선",
             "terminal_text": "종점 텍스트",
             "exit_text": "출구 텍스트",
+            "text": "문자",
             "change_style": "변경",
             "select_style": "스타일 선택",
             "select_new_style": "새 요소 스타일 선택",
             "search_placeholder": "스타일 검색",
+            "system_filter": "스타일 체계",
             "current_style": "현재",
             "no_style_results": "일치하는 스타일이 없습니다",
+            "systems": {
+                "beijing_subway_new": "베이징 지하철 신판",
+                "beijing_subway_old": "베이징 지하철 구판"
+            },
             "special": "독특한 속성",
             "specials": {
                 "line_number": "노선 번호",
@@ -69,7 +83,9 @@
                 "loop_line": "순환 노선",
                 "terminal_station": "종점 역",
                 "line_text_zh": "노선 중국어명",
-                "line_text_en": "노선 영어명"
+                "line_text_en": "노선 영어명",
+                "zh": "중국어 텍스트",
+                "en": "영어 텍스트"
             }
         }
     },
@@ -89,6 +105,8 @@
         "ExitText": "출구 텍스트",
         "To": "행선",
         "Arrow": "화살표",
+        "Split": "구분점",
+        "Text": "문자",
         "↗": "↗",
         "↘": "↘",
         "↑": "↑",

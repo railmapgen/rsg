@@ -157,7 +157,7 @@ export function loadLocalStorage(): BlockData[] {
         if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
             throw new Error('JSON格式不正确，必须是对象格式。');
         }
-        if (!Array.isArray(raw.blocks) || raw.blocks.length === 0) {
+        if (!Array.isArray(raw.blocks)) {
             throw new Error('JSON格式不正确，缺少有效的 blocks 数组。');
         }
 
@@ -220,7 +220,7 @@ export function parseMetroSignImport(content: string) {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
         throw new Error('JSON格式不正确，必须是对象格式。');
     }
-    if (!Array.isArray(raw.blocks) || raw.blocks.length === 0) {
+    if (!Array.isArray(raw.blocks)) {
         throw new Error('JSON格式不正确，缺少有效的 blocks 数组。');
     }
 

@@ -7,6 +7,13 @@
     src: url('/font/SourceHanSansSC-Normal.otf') format('opentype'); /* TTF格式 */
 }
 
+@font-face {
+    font-family: 'Noto Sans SC Medium'; /* 自定义字体名称 */
+    font-style: normal; /* 字体样式，normal表示常规 */
+    font-weight: 400; /* 字体粗细，400表示常规 */
+    src: url('/font/SourceHanSansSC-Medium.otf') format('opentype'); /* TTF格式 */
+}
+
 /* 使用字体 */
 body {
     font-family: 'Noto Sans SC', sans-serif; /* 使用导入的字体 */
@@ -67,6 +74,7 @@ body {
 
 .preview-container {
     overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
     padding: 1px;
     position: fixed;
@@ -74,6 +82,8 @@ body {
     z-index: 10000; /* 远低于调色板的 999999，确保不覆盖 */
     max-height: calc(100vh - 40px); /* 限制高度，避免占满屏幕 */
     background-color: #fff;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pinch-zoom;
 }
 
 .actions {
@@ -219,6 +229,18 @@ body {
     color: #4f5d6b;
 }
 
+.style-picker-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: min(100%, 720px);
+}
+
+.style-picker-system-select {
+    min-width: 180px;
+}
+
 .style-picker-items {
     display: flex;
     flex-direction: column;
@@ -262,6 +284,76 @@ body {
     padding: 16px 0;
     color: #6b7785;
     text-align: center;
+}
+
+.style-picker-modal-content {
+    width: min(1600px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+}
+
+.style-picker-modal-body {
+    max-height: calc(100vh - 92px);
+    overflow: auto;
+}
+
+.style-picker-modal-body .style-picker-list {
+    max-height: none;
+    overflow: visible;
+}
+
+.style-picker-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 10px;
+}
+
+.style-picker-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #d9e2ec;
+    border-radius: 10px;
+    background: #fff;
+    color: #22303c;
+    cursor: pointer;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s,
+        transform 0.2s;
+}
+
+.style-picker-card:hover {
+    background: #f4f9ff;
+    border-color: #8fc5ff;
+    transform: translateY(-1px);
+}
+
+.style-picker-card.is-active {
+    background: #eaf5ff;
+    border-color: #2f9bff;
+}
+
+.style-picker-card-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    padding: 4px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #eff6fb 0%, #e4edf7 100%);
+    overflow: hidden;
+}
+
+.style-picker-card-label {
+    font-weight: 600;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.25;
+    word-break: break-word;
 }
 
 .radio-grid {
@@ -478,4 +570,93 @@ body {
 /* 可选：隐藏/显示控制（配合 JS 切换） */
 .colorPicker-mask.hidden {
     display: none;
+}
+
+.preview-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pinch-zoom;
+}
+
+.preview-container svg,
+.preview-container svg * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .metro-sign-generator {
+        background-color: #0f1724;
+        color: #e5edf5;
+    }
+
+    .controls,
+    .preview-container {
+        background-color: #182231;
+        color: #e5edf5;
+    }
+
+    .actions {
+        border-bottom-color: #2a3a4f;
+    }
+
+    .section label,
+    .style-summary-name,
+    .style-picker-group h4,
+    .bg-color label {
+        color: #e5edf5;
+    }
+
+    .style-summary,
+    .style-picker-item,
+    .special-styles {
+        background: #111927;
+        border-color: #304257;
+        color: #e5edf5;
+    }
+
+    .style-picker-item:hover {
+        background: #1a2838;
+        border-color: #5aa9ff;
+    }
+
+    .style-picker-item.is-active {
+        background: #17304d;
+        border-color: #5aa9ff;
+    }
+
+    .style-picker-empty,
+    .width-control-auto {
+        color: #a9b8c9;
+    }
+
+    .style-picker-card {
+        background: #111927;
+        border-color: #304257;
+        color: #e5edf5;
+    }
+
+    .style-picker-card:hover {
+        background: #1a2838;
+        border-color: #5aa9ff;
+    }
+
+    .style-picker-card.is-active {
+        background: #17304d;
+        border-color: #5aa9ff;
+    }
+
+    .style-picker-card-preview {
+        background: linear-gradient(180deg, #1e2b3b 0%, #162130 100%);
+    }
+
+    .special-input input[type='text'],
+    .special-input input[type='number'],
+    .mantine-Input-input {
+        background-color: #0f1724;
+        border-color: #304257;
+        color: #e5edf5;
+    }
 }

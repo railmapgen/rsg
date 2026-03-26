@@ -1,12 +1,19 @@
 {
     "head_bar": {
-        "project_name": "Subway Signage Generator"
+        "project_name": "Subway Signage Generator",
+        "go_back": "Back",
+        "tutorial": "Tutorial",
+        "scroll_left": "Move Left",
+        "scroll_right": "Move Right",
+        "export_menu": "Export",
+        "import_menu": "Import",
+        "delete_selected": "Delete Selected"
     },
     "main_area": {
         "preview": "Sign Preview",
         "new_block": "Add New Element",
         "delete_all": "Delete All",
-        "confirm_delete_all": "Delete all elements and reset to a single default element?",
+        "confirm_delete_all": "Delete all elements?",
         "export_as_png": "Download as PNG",
         "export_as_json": "Download as JSON",
         "export_as_svg": "Download as SVG",
@@ -28,17 +35,24 @@
             "exit_logo": "Exit Logo",
             "line_text": "Text Line",
             "arrow": "Arrow",
+            "split": "Split",
             "toilet": "Toilet",
             "blank": "Blank",
             "line_space": "Numbered Line",
             "terminal_text": "Terminal Text",
             "exit_text": "Exit Text",
+            "text": "Text",
             "change_style": "Change",
             "select_style": "Select Style",
             "select_new_style": "Select New Element Style",
             "search_placeholder": "Search styles",
+            "system_filter": "Style System",
             "current_style": "Current",
             "no_style_results": "No matching styles",
+            "systems": {
+                "beijing_subway_new": "Beijing Subway New",
+                "beijing_subway_old": "Beijing Subway Old"
+            },
             "special": "Unique Attributes",
             "specials": {
                 "line_number": "Line Number",
@@ -69,7 +83,9 @@
                 "loop_line": "Loop Line",
                 "terminal_station": "Terminal Station",
                 "line_text_zh": "Line Name (Chinese)",
-                "line_text_en": "Line Name (English)"
+                "line_text_en": "Line Name (English)",
+                "zh": "Text (Chinese)",
+                "en": "Text (English)"
             }
         }
     },
@@ -89,6 +105,8 @@
         "ExitText": "Exit Text",
         "To": "Bound for",
         "Arrow": "Arrow",
+        "Split": "Split",
+        "Text": "Text",
         "↗": "↗",
         "↘": "↘",
         "↑": "↑",

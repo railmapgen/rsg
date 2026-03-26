@@ -31,6 +31,14 @@ import {
 } from './metroSignShared';
 import { DeleteZone, SvgDragLayer } from './drag';
 import StylePickerModal from './StylePickerModal';
+import {
+    ADD_BLOCK_EVENT,
+    DELETE_SELECTED_BLOCK_EVENT,
+    EXPORT_ACTION_EVENT,
+    ExportAction,
+    MOVE_SELECTED_BLOCK_EVENT,
+    MOVE_SELECTED_BLOCK_STATE_EVENT,
+} from './windowEvents';
 
 const MetroSignGenerator: React.FC = () => {
     const { t } = useTranslation();
@@ -56,6 +64,7 @@ const MetroSignGenerator: React.FC = () => {
 
     const paletteHelper = useRef(new PaletteModalHelper());
     const svgRef = useRef<SVGSVGElement>(null);
+    const previewContainerRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const toThemeTuple = (theme: BlockTheme): Theme => [theme.city, theme.line, theme.color, theme.textColor];
@@ -63,6 +72,111 @@ const MetroSignGenerator: React.FC = () => {
     useEffect(() => {
         saveLocalStorage(serializeMetroSignData(blocks, backgroundColor, getThemeFromGlobals()));
     }, [blocks, backgroundColor]);
+
+    useEffect(() => {
+        const handleMoveSelectedBlock = (event: Event) => {
+            const customEvent = event as CustomEvent<{ direction?: 'left' | 'right' }>;
+            const direction = customEvent.detail?.direction;
+
+            if (direction !== 'left' && direction !== 'right') {
+                return;
+            }
+
+            setBlocks(prevBlocks => {
+                const selectedIndex = prevBlocks.findIndex(block => block.collapsed);
+                if (selectedIndex === -1) {
+                    return prevBlocks;
+                }
+
+                const targetIndex = direction === 'left' ? selectedIndex - 1 : selectedIndex + 1;
+                if (targetIndex < 0 || targetIndex >= prevBlocks.length) {
+                    return prevBlocks;
+                }
+
+                const nextBlocks = [...prevBlocks];
+                const [selectedBlock] = nextBlocks.splice(selectedIndex, 1);
+                nextBlocks.splice(targetIndex, 0, selectedBlock);
+                return nextBlocks;
+            });
+        };
+
+        const handleDeleteSelectedBlock = () => {
+            setBlocks(prevBlocks => {
+                const selectedIndex = prevBlocks.findIndex(block => block.collapsed);
+                if (selectedIndex < 0) {
+                    return prevBlocks;
+                }
+
+                const nextBlocks = prevBlocks.filter((_, index) => index !== selectedIndex);
+                if (nextBlocks.length === 0) {
+                    return [];
+                }
+
+                if (nextBlocks.some(block => block.collapsed)) {
+                    return nextBlocks;
+                }
+
+                return nextBlocks.map((block, index) => ({
+                    ...block,
+                    collapsed: index === Math.max(0, selectedIndex - 1),
+                }));
+            });
+        };
+
+        window.addEventListener(MOVE_SELECTED_BLOCK_EVENT, handleMoveSelectedBlock as EventListener);
+        window.addEventListener(DELETE_SELECTED_BLOCK_EVENT, handleDeleteSelectedBlock as EventListener);
+        return () => {
+            window.removeEventListener(MOVE_SELECTED_BLOCK_EVENT, handleMoveSelectedBlock as EventListener);
+            window.removeEventListener(DELETE_SELECTED_BLOCK_EVENT, handleDeleteSelectedBlock as EventListener);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleAddBlockRequest = () => {
+            setIsAddBlockModalOpen(true);
+        };
+
+        const handleExportAction = (event: Event) => {
+            const customEvent = event as CustomEvent<{ action?: ExportAction }>;
+
+            switch (customEvent.detail?.action) {
+                case 'png':
+                    void downloadPNG();
+                    break;
+                case 'svg':
+                    void downloadSVG();
+                    break;
+                case 'json':
+                    downloadJSON();
+                    break;
+                case 'import-json':
+                    importJSON();
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        window.addEventListener(ADD_BLOCK_EVENT, handleAddBlockRequest as EventListener);
+        window.addEventListener(EXPORT_ACTION_EVENT, handleExportAction as EventListener);
+        return () => {
+            window.removeEventListener(ADD_BLOCK_EVENT, handleAddBlockRequest as EventListener);
+            window.removeEventListener(EXPORT_ACTION_EVENT, handleExportAction as EventListener);
+        };
+    }, []);
+
+    useEffect(() => {
+        const selectedIndex = blocks.findIndex(block => block.collapsed);
+        window.dispatchEvent(
+            new CustomEvent(MOVE_SELECTED_BLOCK_STATE_EVENT, {
+                detail: {
+                    canMoveLeft: selectedIndex > 0,
+                    canMoveRight: selectedIndex !== -1 && selectedIndex < blocks.length - 1,
+                    canDeleteSelected: selectedIndex !== -1,
+                },
+            })
+        );
+    }, [blocks]);
 
     const updateBlockTheme = (id: number, theme: BlockTheme) => {
         setBlocks(prevBlocks =>
@@ -118,9 +232,7 @@ const MetroSignGenerator: React.FC = () => {
     };
 
     const clearBlocks = () => {
-        const id = getNextBlockId(nextId);
-        setBlocks([createBlock(id)]);
-        setNextId(id + 1);
+        setBlocks([]);
     };
 
     const selectBlock = (id: number) => {
@@ -149,9 +261,11 @@ const MetroSignGenerator: React.FC = () => {
 
     const removeBlock = (id: number) => {
         setBlocks(prevBlocks => {
-            if (prevBlocks.length <= 1) return prevBlocks;
-
             const nextBlocks = prevBlocks.filter(block => block.id !== id);
+            if (nextBlocks.length === 0) {
+                return [];
+            }
+
             if (nextBlocks.some(block => block.collapsed)) {
                 return nextBlocks;
             }
@@ -456,9 +570,15 @@ ${new XMLSerializer().serializeToString(clonedSvg)}`;
 
     return (
         <div className="metro-sign-generator">
-            <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
+            <DndProvider
+                backend={TouchBackend}
+                options={{
+                    enableMouseEvents: true,
+                    ignoreContextMenu: true,
+                }}
+            >
                 <SvgDragLayer />
-                <div className="preview-container" onClick={clearSelectedBlock}>
+                <div ref={previewContainerRef} className="preview-container" onClick={clearSelectedBlock}>
                     <MetroSignPreview
                         blocks={blocks}
                         backgroundColor={backgroundColor}
@@ -473,25 +593,6 @@ ${new XMLSerializer().serializeToString(clonedSvg)}`;
                 <div className="container">
                     <div className="controls">
                         <div className="actions">
-                            <Button onClick={() => setIsAddBlockModalOpen(true)} className="add-btn">
-                                {t('main_area.new_block')}
-                            </Button>
-                            <Button onClick={downloadPNG} className="download-btn">
-                                {t('main_area.export_as_png')}
-                            </Button>
-                            <Button onClick={downloadJSON} className="download-btn">
-                                {t('main_area.export_as_json')}
-                            </Button>
-                            <Button onClick={downloadSVG} className="download-btn">
-                                {t('main_area.export_as_svg')}
-                            </Button>
-                            <Button
-                                onClick={importJSON}
-                                className="download-btn"
-                                style={{ color: '#000', backgroundColor: 'yellow' }}
-                            >
-                                {t('main_area.import_json')}
-                            </Button>
                             <input
                                 ref={fileInputRef}
                                 type="file"
@@ -538,6 +639,7 @@ ${new XMLSerializer().serializeToString(clonedSvg)}`;
                 opened={isAddBlockModalOpen}
                 onClose={() => setIsAddBlockModalOpen(false)}
                 title={t('blocks.styles.select_new_style')}
+                layout="preview-grid"
                 onSelectStyle={style => {
                     addBlock(style);
                     setIsAddBlockModalOpen(false);
@@ -569,9 +671,7 @@ ${new XMLSerializer().serializeToString(clonedSvg)}`;
             <footer>
                 <h6 style={{ color: 'gray' }}>
                     {t('copy').split('https://centralgo.site/vitool/')[0]}
-                    <a style={{ color: 'gray' }} href="https://centralgo.site/vitool/">
-                        https://centralgo.site/vitool/
-                    </a>
+                    <a style={{ color: 'gray' }}>https://centralgo.site/vitool/</a>
                     {t('copy').split('https://centralgo.site/vitool/')[1]}
                 </h6>
             </footer>

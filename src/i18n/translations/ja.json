@@ -1,12 +1,19 @@
 {
     "head_bar": {
-        "project_name": "地下鉄案内標識生成器"
+        "project_name": "地下鉄案内標識生成器",
+        "go_back": "戻る",
+        "tutorial": "ガイド",
+        "scroll_left": "左へ移動",
+        "scroll_right": "右へ移動",
+        "export_menu": "書き出し",
+        "import_menu": "読み込み",
+        "delete_selected": "選択要素を削除"
     },
     "main_area": {
         "preview": "標識プレビュー",
         "new_block": "新しい要素を追加",
         "delete_all": "すべて削除",
-        "confirm_delete_all": "すべての要素を削除し、既定の要素1つに戻しますか？",
+        "confirm_delete_all": "すべての要素を削除しますか？",
         "export_as_png": "PNGとしてダウンロード",
         "background_color": "背景色",
         "export_as_json": "JSONとしてダウンロード",
@@ -28,17 +35,24 @@
             "exit_logo": "出口ロゴ",
             "line_text": "文字路線",
             "arrow": "矢印",
+            "split": "区切り点",
             "toilet": "トイレ",
             "blank": "空白",
             "line_space": "数字路線",
             "terminal_text": "終点テキスト",
             "exit_text": "出口テキスト",
+            "text": "文字",
             "change_style": "変更",
             "select_style": "スタイルを選択",
             "select_new_style": "新しい要素のスタイルを選択",
             "search_placeholder": "スタイルを検索",
+            "system_filter": "スタイル体系",
             "current_style": "現在",
             "no_style_results": "一致するスタイルがありません",
+            "systems": {
+                "beijing_subway_new": "北京地下鉄新版",
+                "beijing_subway_old": "北京地下鉄旧版"
+            },
             "special": "独特な属性",
             "specials": {
                 "line_number": "路線番号",
@@ -69,7 +83,9 @@
                 "loop_line": "環状線",
                 "terminal_station": "終点駅",
                 "line_text_zh": "路線中国語名",
-                "line_text_en": "路線英語名"
+                "line_text_en": "路線英語名",
+                "zh": "中国語テキスト",
+                "en": "英語テキスト"
             }
         }
     },
@@ -89,6 +105,8 @@
         "ExitText": "出口テキスト",
         "To": "行き先",
         "Arrow": "矢印",
+        "Split": "区切り点",
+        "Text": "文字",
         "↗": "↗",
         "↘": "↘",
         "↑": "↑",

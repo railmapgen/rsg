@@ -78,6 +78,8 @@ const MetroSignPreview: React.FC<Props> = ({
                 backgroundColor,
                 userSelect: 'none',
                 WebkitUserSelect: 'none',
+                WebkitTouchCallout: 'none',
+                touchAction: 'pan-x pinch-zoom',
             }}
         >
             {svgElements}

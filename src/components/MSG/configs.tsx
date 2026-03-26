@@ -39,11 +39,18 @@ type StyleGroup = {
     styles: string[];
 };
 
+type StyleSystemId = 'beijing-subway-new' | 'beijing-subway-old';
+type StyleSystemOption = {
+    id: StyleSystemId;
+    labelKey: string;
+};
+
 type BlockTypeConfig = {
     style: string;
     width: number | ((block: BlockData) => number);
     config: SpecialStyleConfig[];
     supportsTheme: boolean;
+    styleSystems: StyleSystemId[];
     labelKey?: string;
     groupTitleKey?: string;
     syncSpecialStylesWithTheme?: (params: {
@@ -61,6 +68,7 @@ type RegisterBlockInput = {
     labelKey?: string;
     groupTitleKey?: StyleGroup['titleKey'];
     supportsTheme?: boolean;
+    styleSystems?: StyleSystemId[];
     supportsManualWidth?: boolean;
     supportsBlockCenter?: boolean;
     syncSpecialStylesWithTheme?: (params: {
@@ -83,11 +91,18 @@ const GROUP_SINGLE = 'blocks.styles.basic_elements';
 const GROUP_ARROW = 'blocks.styles.arrow_elements';
 const GROUP_TWO = 'blocks.styles.line_elements';
 const GROUP_THREE = 'blocks.styles.text_elements';
-const EXIT_TEXT_MIN_WIDTH = 256;
+const STYLE_SYSTEM_NEW: StyleSystemId = 'beijing-subway-new';
+const STYLE_SYSTEM_OLD: StyleSystemId = 'beijing-subway-old';
+const TEXT_MIN_WIDTH = 128;
 const TO_BLOCK_MIN_WIDTH = 384;
 const MANUAL_WIDTH_CONFIG_KEY = 'manual_width';
 const BLOCK_ALIGN_CONFIG_KEY = 'block_align';
 const linePaletteRegistry: Record<string, LinePaletteMetadata> = {};
+const styleSystemRegistry: Record<string, StyleSystemId[]> = {};
+const styleSystemOptions: StyleSystemOption[] = [
+    { id: STYLE_SYSTEM_NEW, labelKey: 'blocks.styles.systems.beijing_subway_new' },
+    { id: STYLE_SYSTEM_OLD, labelKey: 'blocks.styles.systems.beijing_subway_old' },
+];
 const MANUAL_WIDTH_CONFIG: SpecialStyleConfig = {
     key: MANUAL_WIDTH_CONFIG_KEY,
     type: 'number',
@@ -120,7 +135,7 @@ function getLineSpaceWidth(block: BlockData): number {
     const lineNum = block.specialStyles[`${block.id}-0`] || '10';
     const lineNumberWidth = getStringWidth(lineNum, 'Arial', 90, 'letter-spacing: -10px;');
     const lineEnglishWidth = getStringWidth(`Line ${lineNum}`, 'Arial', 25);
-    const lineChineseWidth = getStringWidth('号线', 'Noto Sans SC', 45);
+    const lineChineseWidth = getStringWidth('号线', 'Noto Sans SC Medium', 45);
     const rightLabelWidth = Math.max(lineEnglishWidth, lineChineseWidth);
     return roundBlockWidth(20 + lineNumberWidth + 3 + rightLabelWidth + 20, 0);
 }
@@ -129,19 +144,19 @@ function getLineTextWidth(block: BlockData): number {
     const lineZh = block.specialStyles[`${block.id}-0`] || '西郊线';
     const lineEn = block.specialStyles[`${block.id}-1`] || 'Xijiao Line';
     const lineEnWidth = getStringWidth(lineEn, 'Arial', 25);
-    const lineChWidth = getStringWidth(lineZh, 'Noto Sans SC', 45);
+    const lineChWidth = getStringWidth(lineZh, 'Noto Sans SC Medium', 45);
     const rightLabelWidth = Math.max(lineEnWidth, lineChWidth);
     return roundBlockWidth(20 + rightLabelWidth + 20, 0);
 }
 
-function getExitTextWidth(block: BlockData): number {
-    const exitChinese = block.specialStyles[`${block.id}-2`] || '蓝靛厂南路';
-    const exitEnglish = block.specialStyles[`${block.id}-3`] || 'Landianchang South Rd.';
+function getTextWidth(block: BlockData): number {
+    const textChinese = block.specialStyles[`${block.id}-0`] || '北京西站';
+    const textEnglish = block.specialStyles[`${block.id}-1`] || 'Beijing West Railway Station';
     const contentWidth = Math.max(
-        getStringWidth(exitChinese, 'Noto Sans SC', 50),
-        getStringWidth(exitEnglish, 'Arial', 30)
+        getStringWidth(textChinese, 'Noto Sans SC', 50),
+        getStringWidth(textEnglish, 'Arial', 30)
     );
-    return roundBlockWidth(130 + contentWidth + 20, EXIT_TEXT_MIN_WIDTH);
+    return roundBlockWidth(contentWidth + 20, TEXT_MIN_WIDTH);
 }
 
 function getToBlockWidth(block: BlockData): number {
@@ -183,6 +198,7 @@ function resetBlockRegistries() {
     Object.keys(specialStyleConfigs).forEach(key => delete specialStyleConfigs[key]);
     Object.keys(styleLabelRegistry).forEach(key => delete styleLabelRegistry[key]);
     Object.keys(linePaletteRegistry).forEach(key => delete linePaletteRegistry[key]);
+    Object.keys(styleSystemRegistry).forEach(key => delete styleSystemRegistry[key]);
     styleGroups.forEach(group => {
         group.styles.splice(0, group.styles.length);
     });
@@ -195,6 +211,7 @@ function registerBlock({
     labelKey,
     groupTitleKey,
     supportsTheme,
+    styleSystems = [STYLE_SYSTEM_NEW],
     supportsManualWidth = false,
     supportsBlockCenter = true,
     syncSpecialStylesWithTheme,
@@ -215,6 +232,7 @@ function registerBlock({
         width,
         config: resolvedConfig,
         supportsTheme: resolvedSupportsTheme,
+        styleSystems,
         labelKey,
         groupTitleKey,
         syncSpecialStylesWithTheme,
@@ -222,6 +240,7 @@ function registerBlock({
     };
 
     specialStyleConfigs[style] = resolvedConfig;
+    styleSystemRegistry[style] = styleSystems;
 
     if (labelKey) {
         styleLabelRegistry[style] = labelKey;
@@ -337,6 +356,14 @@ function getDefaultBlockTheme(style: string, fallbackTheme: BlockTheme = DEFAULT
 
 function getBlockThemeColor(block: BlockData): string {
     return block.theme?.color || getDefaultBlockTheme(block.style)?.color || DEFAULT_THEME_COLOR;
+}
+
+function getStyleSystemsForStyle(style: string): StyleSystemId[] {
+    return styleSystemRegistry[style] || [STYLE_SYSTEM_NEW];
+}
+
+function isStyleAvailableInSystem(style: string, styleSystem: StyleSystemId): boolean {
+    return getStyleSystemsForStyle(style).includes(styleSystem);
 }
 
 function getThemeSyncedSpecialStyles(
@@ -667,7 +694,7 @@ export function registerDefaultBlockTypes() {
                     key={`${block.id}-text3`}
                     x={rightEdge}
                     y={55}
-                    fontFamily="Noto Sans SC"
+                    fontFamily="Noto Sans SC Medium"
                     fontSize={45}
                     fill="white"
                     fontWeight={500}
@@ -743,7 +770,7 @@ export function registerDefaultBlockTypes() {
                     key={`${block.id}-text1`}
                     x={lineTextWidth / 2.0 + xPos + 22}
                     y={57}
-                    fontFamily="Noto Sans SC"
+                    fontFamily="Noto Sans SC Medium"
                     fontSize={45}
                     fill="white"
                     fontWeight={500}
@@ -757,48 +784,40 @@ export function registerDefaultBlockTypes() {
 
     registerBlock({
         style: 'ExitText',
-        width: getExitTextWidth,
+        width: 128,
         groupTitleKey: GROUP_THREE,
         labelKey: 'blocks.styles.exit_text',
         supportsManualWidth: true,
         config: [
             { type: 'text', label: 'blocks.styles.specials.exit_letter', defaultValue: 'A', maxLength: 1 },
             { type: 'text', label: 'blocks.styles.specials.exit_lower', defaultValue: '', maxLength: 1 },
-            { type: 'text', label: 'blocks.styles.specials.exit_zh', defaultValue: '蓝靛厂南路' },
-            { type: 'text', label: 'blocks.styles.specials.exit_en', defaultValue: 'Landianchang South Rd.' },
         ],
         render: (block, xPos) => {
             const exitLetter = block.specialStyles[`${block.id}-0`] || 'A';
             const exitSubscript = block.specialStyles[`${block.id}-1`] || '';
-            const exitChinese = block.specialStyles[`${block.id}-2`] || '蓝靛厂南路';
-            const exitEnglish = block.specialStyles[`${block.id}-3`] || 'Landianchang South Rd.';
 
             return [
                 <text
                     key={`${block.id}-text1`}
-                    x={exitSubscript ? xPos + 20 : xPos + 32}
+                    x={exitSubscript ? xPos + 3 : xPos + 22}
                     y={105}
                     fontFamily="Arial"
-                    fontSize={120}
+                    fontSize={110}
                     fill="white"
+                    style={{ fontWeight: 'bold' }}
                 >
                     {exitLetter}
                 </text>,
-                <text key={`${block.id}-text2`} x={xPos + 98} y={107} fontFamily="Arial" fontSize={40} fill="white">
-                    {exitSubscript}
-                </text>,
                 <text
-                    key={`${block.id}-text3`}
-                    x={xPos + 130}
-                    y={60}
-                    fontFamily="Noto Sans SC"
-                    fontSize={50}
+                    key={`${block.id}-text2`}
+                    x={xPos + 80}
+                    y={107}
+                    fontFamily="Arial"
+                    fontSize={80}
                     fill="white"
+                    style={{ fontWeight: 'bold' }}
                 >
-                    {exitChinese}
-                </text>,
-                <text key={`${block.id}-text4`} x={xPos + 130} y={103} fontFamily="Arial" fontSize={30} fill="white">
-                    {exitEnglish}
+                    {exitSubscript}
                 </text>,
             ];
         },
@@ -809,6 +828,7 @@ export function registerDefaultBlockTypes() {
         width: getToBlockWidth,
         groupTitleKey: GROUP_THREE,
         labelKey: 'blocks.styles.terminal_text',
+        styleSystems: [STYLE_SYSTEM_NEW, STYLE_SYSTEM_OLD],
         supportsManualWidth: true,
         config: [
             { type: 'text', label: 'blocks.styles.specials.terminal_zh', defaultValue: '宛平城' },
@@ -956,6 +976,86 @@ export function registerDefaultBlockTypes() {
             ];
         },
     });
+
+    registerBlock({
+        style: 'Split',
+        width: 12,
+        groupTitleKey: GROUP_ARROW,
+        labelKey: 'blocks.styles.split',
+        config: [],
+        render: (block, xPos) => {
+            return [
+                <circle cx={xPos} cy="64" r="6" stroke="#fff" strokeWidth="2" fill="#fff" key={`${block.id}-split`} />,
+            ];
+        },
+    });
+
+    registerBlock({
+        style: 'Text',
+        width: getTextWidth,
+        groupTitleKey: GROUP_THREE,
+        labelKey: 'blocks.styles.text',
+        styleSystems: [STYLE_SYSTEM_NEW, STYLE_SYSTEM_OLD],
+        config: [
+            { type: 'text', label: 'blocks.styles.specials.zh', defaultValue: '北京西站' },
+            { type: 'text', label: 'blocks.styles.specials.en', defaultValue: 'Beijing West Railway Station' },
+            {
+                type: 'radio',
+                label: 'blocks.styles.specials.text_align',
+                defaultValue: 'R',
+                options: [
+                    { value: 'R', label: 'blocks.styles.specials.align_right' },
+                    { value: 'L', label: 'blocks.styles.specials.align_left' },
+                    { value: 'C', label: 'blocks.styles.specials.align_center' },
+                ],
+            },
+            {
+                type: 'radio',
+                label: 'blocks.styles.specials.line_type',
+                defaultValue: 'NM',
+                options: [
+                    { value: 'NM', label: 'blocks.styles.specials.normal_line' },
+                    { value: 'LOOP', label: 'blocks.styles.specials.loop_line' },
+                    { value: 'T', label: 'blocks.styles.specials.terminal_station' },
+                ],
+            },
+        ],
+        render: (block, xPos, blockWidth) => {
+            const Chinese = block.specialStyles[`${block.id}-0`] || '北京西站';
+            const English = block.specialStyles[`${block.id}-1`] || 'Beijing West Railway Station';
+            const align = block.specialStyles[`${block.id}-2`] || 'R';
+            const textAnchor = align === 'R' ? 'end' : align === 'C' ? 'middle' : 'start';
+            const centerX = xPos + blockWidth / 2;
+            const rightX = xPos + blockWidth - 10;
+            const leftX = xPos + 10;
+            const x = align === 'R' ? rightX : align === 'C' ? centerX : leftX;
+
+            return [
+                <text
+                    key={`${block.id}-text3`}
+                    x={x}
+                    y={60}
+                    fontFamily="Noto Sans SC"
+                    fontSize={50}
+                    fill="white"
+                    textAnchor={textAnchor}
+                >
+                    {Chinese}
+                </text>,
+                <text
+                    key={`${block.id}-text4`}
+                    x={x}
+                    y={103}
+                    fontFamily="Arial"
+                    fontSize={30}
+                    fill="white"
+                    textAnchor={textAnchor}
+                >
+                    {English}
+                </text>,
+            ];
+        },
+    });
 }
 
 export function renderBlockSVG(block: BlockData, xPos: number, blockWidth: number): React.ReactNode[] {
@@ -989,6 +1089,9 @@ export {
     MANUAL_WIDTH_CONFIG_KEY,
     BLOCK_ALIGN_CONFIG_KEY,
     DEFAULT_BLOCK_STYLE,
+    styleSystemOptions,
+    getStyleSystemsForStyle,
+    isStyleAvailableInSystem,
     createBlock,
     hasSpecialStyleConfig,
     isThemeStyle,

@@ -308,6 +308,7 @@ const MetroSignBlockEditor: React.FC<Props> = ({
                 onClose={() => setIsStyleModalOpen(false)}
                 title={t('blocks.styles.select_style')}
                 activeStyle={activeBlock.style}
+                layout="preview-grid"
                 onSelectStyle={style => {
                     onUpdateBlockStyle(activeBlock.id, style);
                     setIsStyleModalOpen(false);

@@ -1,12 +1,19 @@
 {
     "head_bar": {
-        "project_name": "地铁导视生成器"
+        "project_name": "地铁导视生成器",
+        "go_back": "返回",
+        "tutorial": "教程",
+        "scroll_left": "左移元素",
+        "scroll_right": "右移元素",
+        "export_menu": "导出",
+        "import_menu": "导入",
+        "delete_selected": "删除选中元素"
     },
     "main_area": {
         "preview": "标志预览",
         "new_block": "添加新元素",
         "delete_all": "删除全部",
-        "confirm_delete_all": "确认删除全部元素并重置为一个默认元素吗？",
+        "confirm_delete_all": "确认删除全部元素吗？",
         "export_as_png": "下载png",
         "background_color": "背景颜色",
         "export_as_json": "导出 JSON",
@@ -28,17 +35,24 @@
             "exit_logo": "出口图标",
             "line_text": "文字线路",
             "arrow": "箭头",
+            "split": "分隔点",
             "toilet": "洗手间",
             "blank": "空",
             "line_space": "数字线路",
             "terminal_text": "终点文字",
             "exit_text": "出口文字",
+            "text": "文字",
             "change_style": "修改",
             "select_style": "选择样式",
             "select_new_style": "选择新元素样式",
             "search_placeholder": "搜索样式",
+            "system_filter": "样式体系",
             "current_style": "当前",
             "no_style_results": "没有匹配的样式",
+            "systems": {
+                "beijing_subway_new": "北京地铁新版",
+                "beijing_subway_old": "北京地铁旧版"
+            },
             "special": "独特属性",
             "specials": {
                 "line_number": "线路编号",
@@ -69,7 +83,9 @@
                 "loop_line": "环线",
                 "terminal_station": "终点站",
                 "line_text_zh": "线路中文名",
-                "line_text_en": "线路英文名"
+                "line_text_en": "线路英文名",
+                "zh": "中文文字",
+                "en": "英文文字"
             }
         }
     },
@@ -89,6 +105,8 @@
         "ExitText": "出口文字",
         "To": "开往",
         "Arrow": "箭头",
+        "Split": "分隔点",
+        "Text": "文字",
         "↗": "↗",
         "↘": "↘",
         "↑": "↑",

@@ -40,3 +40,105 @@ div#root {
 * {
     box-sizing: border-box;
 }
+
+.tutorial-modal-content {
+    width: min(1440px, calc(100vw - 48px));
+    max-width: calc(100vw - 48px);
+}
+
+.tutorial-modal-header {
+    padding-bottom: 0.5rem;
+}
+
+.tutorial-modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.tutorial-modal-body {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding-top: 0.25rem;
+}
+
+.tutorial-markdown {
+    color: #1b2a3a;
+    font-size: 0.97rem;
+    line-height: 1.75;
+}
+
+.tutorial-markdown-h1,
+.tutorial-markdown-h2 {
+    color: #10263d;
+    line-height: 1.25;
+    margin: 0 0 0.9rem;
+}
+
+.tutorial-markdown-h1 {
+    font-size: 1.55rem;
+}
+
+.tutorial-markdown-h2 {
+    font-size: 1.05rem;
+    margin-top: 1.4rem;
+}
+
+.tutorial-markdown-paragraph,
+.tutorial-markdown-list {
+    margin: 0 0 0.95rem;
+}
+
+.tutorial-markdown-list {
+    padding-left: 1.35rem;
+}
+
+.tutorial-markdown code {
+    background: rgba(16, 38, 61, 0.08);
+    border-radius: 6px;
+    padding: 0.1rem 0.35rem;
+    font-family: 'Cascadia Code', 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.92em;
+}
+
+.tutorial-markdown a {
+    color: #0b6bcb;
+    text-decoration: none;
+}
+
+.tutorial-markdown a:hover {
+    text-decoration: underline;
+}
+
+.tutorial-markdown-code {
+    background: #0f1724;
+    border-radius: 12px;
+    color: #e9f0f7;
+    margin: 1rem 0;
+    overflow-x: auto;
+    padding: 0.9rem 1rem;
+}
+
+.tutorial-markdown-code code {
+    background: transparent;
+    padding: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tutorial-markdown {
+        color: #e7eef7;
+    }
+
+    .tutorial-markdown-h1,
+    .tutorial-markdown-h2 {
+        color: #f3f7fb;
+    }
+
+    .tutorial-markdown code {
+        background: rgba(232, 242, 255, 0.1);
+        color: #f5f8fb;
+    }
+
+    .tutorial-markdown a {
+        color: #7dc2ff;
+    }
+}
