@@ -1,5 +1,13 @@
 export type Theme = [string, string, string, '#000' | '#fff'];
 
+const createAppClipId = (): string => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+
+    return `rmg-${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`;
+};
+
 /**
  * 适配调色板内部确定按钮的通信助手类（支持多次打开/关闭）
  */
@@ -21,7 +29,7 @@ export class PaletteModalHelper {
     private isInitialized = false;
 
     constructor() {
-        this.appClipId = crypto.randomUUID(); // 每次实例化生成新ID，避免复用冲突
+        this.appClipId = createAppClipId(); // 每次实例化生成新ID，避免复用冲突
     }
 
     /**
@@ -37,28 +45,30 @@ export class PaletteModalHelper {
         }
 
         // 创建通信通道
-        this.channel = new BroadcastChannel(`rmg-palette-bridge--${this.appClipId}`);
-        this.channel.onmessage = ev => {
-            const { event, data } = ev.data as { event: 'SELECT' | 'CONFIRM' | 'CLOSE'; data?: Theme };
+        if (typeof BroadcastChannel !== 'undefined') {
+            this.channel = new BroadcastChannel(`rmg-palette-bridge--${this.appClipId}`);
+            this.channel.onmessage = ev => {
+                const { event, data } = ev.data as { event: 'SELECT' | 'CONFIRM' | 'CLOSE'; data?: Theme };
 
-            switch (event) {
-                case 'SELECT':
-                    // 调色板内选中颜色（临时，不关闭）
-                    this.selectedTheme = data as Theme;
-                    this.callbacks.onSelect(this.selectedTheme);
-                    break;
-                case 'CONFIRM':
-                    // 调色板内点击确定：保存确认颜色 + 触发确认回调 + 触发关闭
-                    this.confirmedTheme = data as Theme;
-                    this.callbacks.onConfirm(this.confirmedTheme);
-                    this.callbacks.onClose(); // 触发关闭弹窗
-                    break;
-                case 'CLOSE':
-                    // 调色板内点击叉叉：仅触发关闭，不保存确认颜色
-                    this.callbacks.onClose();
-                    break;
-            }
-        };
+                switch (event) {
+                    case 'SELECT':
+                        // 调色板内选中颜色（临时，不关闭）
+                        this.selectedTheme = data as Theme;
+                        this.callbacks.onSelect(this.selectedTheme);
+                        break;
+                    case 'CONFIRM':
+                        // 调色板内点击确定：保存确认颜色 + 触发确认回调 + 触发关闭
+                        this.confirmedTheme = data as Theme;
+                        this.callbacks.onConfirm(this.confirmedTheme);
+                        this.callbacks.onClose(); // 触发关闭弹窗
+                        break;
+                    case 'CLOSE':
+                        // 调色板内点击叉叉：仅触发关闭，不保存确认颜色
+                        this.callbacks.onClose();
+                        break;
+                }
+            };
+        }
 
         this.isInitialized = true;
     }
@@ -78,9 +88,11 @@ export class PaletteModalHelper {
      * 发送默认颜色到调色板（每次打开弹窗时触发）
      */
     sendDefaultTheme(theme: Theme): void {
-        if (this.channel) {
-            this.channel.postMessage({ event: 'OPEN', data: theme });
+        if (!this.channel) {
+            return;
         }
+
+        this.channel.postMessage({ event: 'OPEN', data: theme });
     }
 
     /**

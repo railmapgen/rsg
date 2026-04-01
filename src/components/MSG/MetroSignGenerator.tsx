@@ -11,6 +11,7 @@ import {
     BlockData,
     BlockTheme,
     createBlock,
+    getBlockWidth,
     getThemeSyncedSpecialStyles,
     hasSpecialStyleConfig,
     isThemeStyle,
@@ -65,9 +66,98 @@ const MetroSignGenerator: React.FC = () => {
     const paletteHelper = useRef(new PaletteModalHelper());
     const svgRef = useRef<SVGSVGElement>(null);
     const previewContainerRef = useRef<HTMLDivElement>(null);
+    const sliderTrackRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [previewOffset, setPreviewOffset] = useState(0);
+    const [containerWidth, setContainerWidth] = useState(0);
+    const [isDraggingScroll, setIsDraggingScroll] = useState(false);
 
     const toThemeTuple = (theme: BlockTheme): Theme => [theme.city, theme.line, theme.color, theme.textColor];
+
+    const totalSvgWidth = blocks.reduce((sum, block) => sum + getBlockWidth(block), 0);
+    const maxPreviewOffset = Math.max(totalSvgWidth - containerWidth, 0);
+
+    const updateContainerWidth = useCallback(() => {
+        const width = previewContainerRef.current?.clientWidth ?? 0;
+        setContainerWidth(width);
+    }, []);
+
+    useEffect(() => {
+        updateContainerWidth();
+        let observer: ResizeObserver | null = null;
+        if (typeof ResizeObserver !== 'undefined') {
+            observer = new ResizeObserver(() => {
+                updateContainerWidth();
+            });
+            if (previewContainerRef.current) {
+                observer.observe(previewContainerRef.current);
+            }
+        }
+        window.addEventListener('resize', updateContainerWidth);
+        return () => {
+            if (observer) {
+                observer.disconnect();
+            }
+            window.removeEventListener('resize', updateContainerWidth);
+        };
+    }, [updateContainerWidth]);
+
+    const handleScrollTrack = useCallback(
+        (clientX: number) => {
+            if (maxPreviewOffset <= 0) {
+                setPreviewOffset(0);
+                return;
+            }
+
+            const track = sliderTrackRef.current;
+            if (!track) return;
+
+            const { left, width } = track.getBoundingClientRect();
+            if (width <= 0) return;
+
+            const ratio = Math.min(Math.max((clientX - left) / width, 0), 1);
+            setPreviewOffset(ratio * maxPreviewOffset);
+        },
+        [maxPreviewOffset]
+    );
+
+    const viewportPercent = totalSvgWidth > 0 ? Math.min(100, (containerWidth / totalSvgWidth) * 100) : 100;
+    const thumbWidthPercent = Math.max(8, viewportPercent);
+    const thumbRangePercent = Math.max(100 - thumbWidthPercent, 0);
+    const thumbLeftPercent = maxPreviewOffset > 0 ? (previewOffset / maxPreviewOffset) * thumbRangePercent : 0;
+    const showScrollbar = maxPreviewOffset > 0;
+
+    useEffect(() => {
+        if (previewOffset > maxPreviewOffset) {
+            setPreviewOffset(maxPreviewOffset);
+        }
+    }, [maxPreviewOffset, previewOffset]);
+
+    useEffect(() => {
+        if (maxPreviewOffset === 0 && previewOffset !== 0) {
+            setPreviewOffset(0);
+        }
+    }, [maxPreviewOffset, previewOffset]);
+
+    useEffect(() => {
+        const handlePointerMove = (event: PointerEvent) => {
+            if (!isDraggingScroll) return;
+            handleScrollTrack(event.clientX);
+        };
+
+        const handlePointerUp = () => {
+            if (isDraggingScroll) {
+                setIsDraggingScroll(false);
+            }
+        };
+
+        window.addEventListener('pointermove', handlePointerMove);
+        window.addEventListener('pointerup', handlePointerUp);
+        return () => {
+            window.removeEventListener('pointermove', handlePointerMove);
+            window.removeEventListener('pointerup', handlePointerUp);
+        };
+    }, [handleScrollTrack, isDraggingScroll]);
 
     useEffect(() => {
         saveLocalStorage(serializeMetroSignData(blocks, backgroundColor, getThemeFromGlobals()));
@@ -579,14 +669,47 @@ ${new XMLSerializer().serializeToString(clonedSvg)}`;
             >
                 <SvgDragLayer />
                 <div ref={previewContainerRef} className="preview-container" onClick={clearSelectedBlock}>
-                    <MetroSignPreview
-                        blocks={blocks}
-                        backgroundColor={backgroundColor}
-                        svgRef={svgRef}
-                        selectedBlockId={blocks.find(block => block.collapsed)?.id ?? null}
-                        moveCard={moveCard}
-                        onSelectBlock={selectBlock}
-                    />
+                    <div className="preview-viewport">
+                        <div className="preview-track" style={{ transform: `translateX(${-previewOffset}px)` }}>
+                            <MetroSignPreview
+                                blocks={blocks}
+                                backgroundColor={backgroundColor}
+                                svgRef={svgRef}
+                                selectedBlockId={blocks.find(block => block.collapsed)?.id ?? null}
+                                moveCard={moveCard}
+                                onSelectBlock={selectBlock}
+                            />
+                            <div className="preview-track-spacer" />
+                        </div>
+                    </div>
+                    {showScrollbar && (
+                        <div
+                            ref={sliderTrackRef}
+                            className="preview-scrollbar"
+                            onPointerDown={event => {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                handleScrollTrack(event.clientX);
+                                setIsDraggingScroll(true);
+                            }}
+                        >
+                            <div className="preview-scrollbar-track">
+                                <div
+                                    className="preview-scrollbar-thumb"
+                                    style={{
+                                        width: `${thumbWidthPercent}%`,
+                                        left: `${thumbLeftPercent}%`,
+                                    }}
+                                    onPointerDown={event => {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                        setIsDraggingScroll(true);
+                                        handleScrollTrack(event.clientX);
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="placeholder"></div>
