@@ -1,6 +1,6 @@
 {
   "component": "rsg",
-  "version": "2.1.2",
+  "version": "2.0.15.(HEAD.7df946c",
   "environment": "PRD",
   "instance": "GitHub"
 }
