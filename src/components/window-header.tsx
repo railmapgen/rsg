@@ -125,29 +125,25 @@ export default function WindowHeader() {
             >
                 <MdDeleteOutline />
             </IconButton>
-            {rmgRuntime.isStandaloneWindow() && (
-                <Menu>
-                    <Menu.Target>
-                        <IconButton
-                            size="sm"
-                            variant="ghost"
-                            aria-label={t('head_bar.export_menu')}
-                            title={t('head_bar.export_menu')}
-                            color="#111"
-                            _disabled={{ color: '#9ca3af' }}
-                        >
-                            <MdDownload />
-                        </IconButton>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Item onClick={() => handleExportAction('png')}>{t('main_area.export_as_png')}</Menu.Item>
-                        <Menu.Item onClick={() => handleExportAction('svg')}>{t('main_area.export_as_svg')}</Menu.Item>
-                        <Menu.Item onClick={() => handleExportAction('json')}>
-                            {t('main_area.export_as_json')}
-                        </Menu.Item>
-                    </Menu.Dropdown>
-                </Menu>
-            )}
+            <Menu>
+                <Menu.Target>
+                    <IconButton
+                        size="sm"
+                        variant="ghost"
+                        aria-label={t('head_bar.export_menu')}
+                        title={t('head_bar.export_menu')}
+                        color="#111"
+                        _disabled={{ color: '#9ca3af' }}
+                    >
+                        <MdDownload />
+                    </IconButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    <Menu.Item onClick={() => handleExportAction('png')}>{t('main_area.export_as_png')}</Menu.Item>
+                    <Menu.Item onClick={() => handleExportAction('svg')}>{t('main_area.export_as_svg')}</Menu.Item>
+                    <Menu.Item onClick={() => handleExportAction('json')}>{t('main_area.export_as_json')}</Menu.Item>
+                </Menu.Dropdown>
+            </Menu>
             <IconButton
                 size="sm"
                 variant="ghost"
@@ -159,27 +155,29 @@ export default function WindowHeader() {
             >
                 <MdUpload />
             </IconButton>
-            <Menu>
-                <Menu.Target>
-                    <IconButton
-                        size="sm"
-                        variant="ghost"
-                        aria-label={t('Language')}
-                        title={t('Language')}
-                        color="#111"
-                        _disabled={{ color: '#9ca3af' }}
-                    >
-                        <MdTranslate />
-                    </IconButton>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    {(['en', 'zh-Hans', 'zh-Hant', 'ja', 'ko'] as LanguageCode[]).map(lang => (
-                        <Menu.Item key={lang} onClick={() => handleChangeLanguage(lang)}>
-                            {LANGUAGE_NAMES[lang][lang]}
-                        </Menu.Item>
-                    ))}
-                </Menu.Dropdown>
-            </Menu>
+            {rmgRuntime.isStandaloneWindow() && (
+                <Menu>
+                    <Menu.Target>
+                        <IconButton
+                            size="sm"
+                            variant="ghost"
+                            aria-label={t('Language')}
+                            title={t('Language')}
+                            color="#111"
+                            _disabled={{ color: '#9ca3af' }}
+                        >
+                            <MdTranslate />
+                        </IconButton>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        {(['en', 'zh-Hans', 'zh-Hant', 'ja', 'ko'] as LanguageCode[]).map(lang => (
+                            <Menu.Item key={lang} onClick={() => handleChangeLanguage(lang)}>
+                                {LANGUAGE_NAMES[lang][lang]}
+                            </Menu.Item>
+                        ))}
+                    </Menu.Dropdown>
+                </Menu>
+            )}
             <IconButton
                 size="sm"
                 variant="ghost"
