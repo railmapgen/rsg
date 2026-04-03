@@ -155,29 +155,27 @@ export default function WindowHeader() {
             >
                 <MdUpload />
             </IconButton>
-            {rmgRuntime.isStandaloneWindow() && (
-                <Menu>
-                    <Menu.Target>
-                        <IconButton
-                            size="sm"
-                            variant="ghost"
-                            aria-label={t('Language')}
-                            title={t('Language')}
-                            color="#111"
-                            _disabled={{ color: '#9ca3af' }}
-                        >
-                            <MdTranslate />
-                        </IconButton>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        {(['en', 'zh-Hans', 'zh-Hant', 'ja', 'ko'] as LanguageCode[]).map(lang => (
-                            <Menu.Item key={lang} onClick={() => handleChangeLanguage(lang)}>
-                                {LANGUAGE_NAMES[lang][lang]}
-                            </Menu.Item>
-                        ))}
-                    </Menu.Dropdown>
-                </Menu>
-            )}
+            <Menu>
+                <Menu.Target>
+                    <IconButton
+                        size="sm"
+                        variant="ghost"
+                        aria-label={t('Language')}
+                        title={t('Language')}
+                        color="#111"
+                        _disabled={{ color: '#9ca3af' }}
+                    >
+                        <MdTranslate />
+                    </IconButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    {(['en', 'zh-Hans', 'zh-Hant', 'ja', 'ko'] as LanguageCode[]).map(lang => (
+                        <Menu.Item key={lang} onClick={() => handleChangeLanguage(lang)}>
+                            {LANGUAGE_NAMES[lang][lang]}
+                        </Menu.Item>
+                    ))}
+                </Menu.Dropdown>
+            </Menu>
             <IconButton
                 size="sm"
                 variant="ghost"
