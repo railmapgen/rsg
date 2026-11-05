@@ -1,8 +1,8 @@
 {
     "head_bar": {
-        "project_name": "地下鉄案内標識生成器",
+        "project_name": "地下鉄案内表示生成器",
         "go_back": "戻る",
-        "tutorial": "ガイド",
+        "tutorial": "操作手引き",
         "scroll_left": "左へ移動",
         "scroll_right": "右へ移動",
         "export_menu": "書き出し",
@@ -17,7 +17,7 @@
         "export_as_png": "PNGとしてダウンロード",
         "background_color": "背景色",
         "export_as_json": "JSONとしてダウンロード",
-        "import_json": "JSONをインポート",
+        "import_json": "JSONを読み込み",
         "export_as_svg": "SVGとしてダウンロード",
         "release_to_delete": "離すと削除",
         "drag_here_to_delete": "ここにドラッグして削除"
@@ -27,7 +27,7 @@
         "block": "要素",
         "cutline": "分割線（右）",
         "styles": {
-            "style": "スタイル",
+            "style": "様式",
             "basic_elements": "基本要素",
             "arrow_elements": "矢印要素",
             "line_elements": "路線要素",
@@ -43,12 +43,12 @@
             "exit_text": "出口テキスト",
             "text": "文字",
             "change_style": "変更",
-            "select_style": "スタイルを選択",
-            "select_new_style": "新しい要素のスタイルを選択",
-            "search_placeholder": "スタイルを検索",
-            "system_filter": "スタイル体系",
+            "select_style": "様式を選択",
+            "select_new_style": "新しい要素の様式を選択",
+            "search_placeholder": "様式を検索",
+            "system_filter": "様式体系",
             "current_style": "現在",
-            "no_style_results": "一致するスタイルがありません",
+            "no_style_results": "一致する様式がありません",
             "systems": {
                 "beijing_subway_new": "北京地下鉄新版",
                 "beijing_subway_old": "北京地下鉄旧版"
@@ -59,12 +59,12 @@
                 "line_color": "路線色",
                 "terminal_zh": "終点駅（中国語）",
                 "terminal_en": "終点駅（英語）",
-                "text_align": "テキストの配置",
+                "text_align": "文字揃え",
                 "block_align": "全体の配置",
                 "manual_width": "手動幅",
-                "align_right": "右寄せ",
-                "align_center": "中央寄せ",
-                "align_left": "左寄せ",
+                "align_right": "右揃え",
+                "align_center": "中央揃え",
+                "align_left": "左揃え",
                 "exit_letter": "出口番号",
                 "exit_lower": "出口の下付き文字",
                 "exit_zh": "出口（中国語）",
@@ -81,9 +81,9 @@
                 "line_type": "路線種別",
                 "normal_line": "普通線",
                 "loop_line": "環状線",
-                "terminal_station": "終点駅",
-                "line_text_zh": "路線中国語名",
-                "line_text_en": "路線英語名",
+                "terminal_station": "終着駅",
+                "line_text_zh": "中国語路線名",
+                "line_text_en": "英語路線名",
                 "zh": "中国語テキスト",
                 "en": "英語テキスト"
             }
@@ -93,12 +93,12 @@
         "yes": "はい",
         "no": "いいえ",
         "auto": "自動",
-        "cancel": "キャンセル"
+        "cancel": "取消"
     },
     "styleToText": {
         "Exit": "出口",
         "toilet": "トイレ",
-        "blank1": "空欄",
+        "blank1": "空白",
         "Line": "路線",
         "Line-space": "数字路線",
         "Line-text": "文字路線",
@@ -116,5 +116,10 @@
         "↙": "↙",
         "↖": "↖"
     },
-    "copy": "一部の素材はhttps://centralgo.site/vitool/より提供されています。"
+    "copy": "一部の素材はhttps://centralgo.site/vitool/より提供されています。",
+    "Back": "戻る",
+    "Cancel": "取消",
+    "Language": "言語",
+    "No": "いいえ",
+    "Yes": "はい"
 }
