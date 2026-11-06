@@ -17,7 +17,7 @@
         "@railmapgen/mantine-components": "^0.1.15",
         "@railmapgen/rmg-palette-resources": "^3.0.2",
         "@railmapgen/rmg-runtime": "^11.0.1",
-        "@railmapgen/rmg-translate": "^3.4.3",
+        "@railmapgen/rmg-translate": "^3.5.4",
         "@reduxjs/toolkit": "^2.6.0",
         "react": "^19.0.0",
         "react-dnd": "^16.0.1",
